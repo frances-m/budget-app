@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+
 import firebase from './firebase';
+import { getDatabase, ref, set } from 'firebase/database';
 
 import Header from './components/Header';
 import Income from './components/Income';
@@ -9,24 +11,90 @@ import Results from './components/Results';
 import './App.css';
 
 function App() {
-    const [income, setIncome] = useState({});
-    const [expenses, setExpenses] = useState({});
+    const [income, setIncome] = useState({
+        wages: 0,
+        otherIncome: 0
+    });
+    const [expenses, setExpenses] = useState({
+        rent: 0,
+        utilities: 0
+    });
 
     const [totalIncome, setTotalIncome] = useState("$0");
     const [totalExpenses, setTotalExpenses] = useState("$0");
     const [netIncome, setNetIncome] = useState("$0");
 
     useEffect(() => {
+        let calcIncome = 0;
+        let calcExpenses = 0;
+        
+        for (let key in income) {
+            calcIncome += Number(income[key]);
+        }
 
+        for (let key in expenses) {
+            calcExpenses += Number(expenses[key]);
+        }
+
+        setTotalIncome(calcIncome);
+        setTotalExpenses(calcExpenses);
+        setNetIncome(calcIncome - calcExpenses);
     }, [income, expenses]);
+
+    const handleInputChange = (e) => {
+        const key = e.target.name;
+        let value;
+
+        if (e.target.value !== "$") {
+            value = Number(e.target.value.replace(/[,$]/g, ''));
+        } 
+        
+        if (!value) {
+            value = 0;
+        }
+
+        if (value > 99999) {
+            return;
+        }
+        
+        return [key, value];
+    }
+
+    const updateIncome = (e) => {
+        try {
+            const [key, value] = handleInputChange(e);
+    
+            setIncome(prev => ({
+                ...prev,
+                [key]: value
+            }));
+
+        } catch (err) {
+            return;
+        }
+    }
+
+    const updateExpenses = (e) => {
+        try {
+            const [key, value] = handleInputChange(e);
+    
+            setExpenses(prev => ({
+                ...prev,
+                [key]: value
+            }));
+
+        } catch (err) {
+            return;
+        }
+    }
 
     return (
         <>
             <Header />
             <main className="wrapper">
-                <Income />
-                <Results />
-                <Expenses />
+                <Income income={income} updateIncome={updateIncome} />
+                <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
+                <Expenses expenses={expenses} updateExpenses={updateExpenses} />
             </main>
         </>
     );

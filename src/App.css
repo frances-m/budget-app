@@ -61,6 +61,10 @@ h1, h2, h3 {
 }
 
 /*** BASE STYLES ***/
+body {
+	min-height: 100vh;
+}
+
 .wrapper {
 	width: 90%;
 	max-width: 1160px;
@@ -96,6 +100,7 @@ label {
 	height: 0;
 	padding: 11px 0 0 20px;
 }
+
 
 /*** HEADER STYLES ***/
 header {
