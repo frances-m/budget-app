@@ -3,6 +3,7 @@
 html {
 	font-size: 125%;
 	font-family: 'Cabin', sans-serif;
+	text-transform: lowercase;
 }
 
 /* font-size */

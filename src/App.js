@@ -9,6 +9,12 @@ import './App.css';
 function App() {
     return (
         <>
+            <Header />
+            <main>
+                <Income />
+                <Results />
+                <Expenses />
+            </main>
         </>
     );
 }
