@@ -2,8 +2,12 @@
 /* Global */
 html {
 	font-size: 125%;
-	font-family: 'Cabin', sans-serif;
 	text-transform: lowercase;
+}
+
+html, 
+input {
+	font-family: 'Cabin', sans-serif;
 }
 
 /* font-size */
@@ -53,6 +57,30 @@ h1, h2, h3,
 }
 
 
+/*** INPUT STYLES ***/
+.input-container {
+	position: relative;
+}
+
+input {
+	width: 400px;
+	height: 45px;
+	margin: 0 0 15px 0;
+	padding: 0 20px;
+	border: 5px solid black;
+	border-radius: 38px;
+
+	text-align: right;
+}
 
 
-/*** BASE STYLES ***/
+label {
+	position: absolute;
+	height: 0;
+	padding: 11px 0 0 20px;
+}
+
+/*** MAIN GRID ***/
+main {
+	display: grid;
+}
