@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import firebase from './firebase';
-import { getDatabase, ref, set } from 'firebase/database';
+import { getDatabase, onValue, ref, set } from 'firebase/database';
 
 import Header from './components/Header';
 import Income from './components/Income';
@@ -40,6 +40,17 @@ function App() {
         setTotalExpenses(calcExpenses);
         setNetIncome(calcIncome - calcExpenses);
     }, [income, expenses]);
+
+    useEffect(() => {
+        const database = getDatabase(firebase);
+        const dbRef = ref(database);
+
+        onValue(dbRef, (response) => {
+            const data = response.val();
+            setIncome(data.income);
+            setExpenses(data.expenses);
+        })
+    }, []);
 
     const handleInputChange = (e) => {
         const key = e.target.name;
@@ -88,9 +99,17 @@ function App() {
         }
     }
 
+    const save = () => {
+        const database = getDatabase(firebase);
+        const dbIncome = ref(database, '/income');
+        const dbExpenses = ref(database, '/expenses');
+        set(dbIncome, income);
+        set(dbExpenses, expenses);
+    }
+
     return (
         <>
-            <Header />
+            <Header save={save} />
             <main className="wrapper">
                 <Income income={income} updateIncome={updateIncome} />
                 <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
