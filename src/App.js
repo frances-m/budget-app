@@ -56,7 +56,7 @@ function App() {
         if (value > 99999) {
             return;
         }
-        
+
         return [key, value];
     }
 

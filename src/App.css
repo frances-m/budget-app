@@ -2,12 +2,13 @@
 /* Global */
 html {
 	font-size: 125%;
-	text-transform: lowercase;
 }
 
 html, 
-input {
+input,
+button {
 	font-family: 'Cabin', sans-serif;
+	text-transform: lowercase;
 }
 
 /* font-size */
@@ -19,7 +20,7 @@ h2 {
 	font-size: 1.6rem;
 }
 
-h3 {
+h3, button {
 	font-size: 1.2rem;
 }
 
@@ -43,7 +44,9 @@ h1,
 	font-weight: 700;
 }
 
-h2, label {
+h2, 
+label,
+button {
 	font-weight: 600;
 }
 
@@ -79,6 +82,14 @@ h3 {
 	margin: 0 0 5px 0;
 }
 
+button {
+	border: none;
+
+	background-color: transparent;
+
+	cursor: pointer;
+}
+
 /*** INPUT STYLES ***/
 .input-container {
 	position: relative;
@@ -105,6 +116,21 @@ label {
 /*** HEADER STYLES ***/
 header {
 	padding: 60px 0 75px 0;
+	width: 100vw;
+}
+
+header .wrapper {
+	display: flex;
+	justify-content: space-between;
+}
+
+header svg {
+	height: 40px;
+	width: 40px;
+}
+
+header button:hover > svg {
+	fill: palevioletred;
 }
 
 /*** MAIN GRID ***/
@@ -131,5 +157,11 @@ main {
 }
 
 .net-income {
+	width: 380px;
+	height: 178px;
 	margin: 0 0 0 85px;
+	padding: 20px;
+
+	color: white;
+	background-color: black;
 }
