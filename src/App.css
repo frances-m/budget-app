@@ -15,7 +15,7 @@ h1 {
 	font-size: 2.4rem; 
 }
 
-h2, .totals {
+h2, .total {
 	font-size: 1.6rem;
 }
 
@@ -34,7 +34,8 @@ label {
 }
 
 /* font-weight */
-h1 {
+h1,
+.total, .net {
 	font-weight: 700;
 }
 
@@ -52,7 +53,7 @@ input {
 
 /* letter-spacing */
 h1, h2, h3,
-.totals, .net {
+.total, .net {
 	letter-spacing: 3px;
 }
 
@@ -83,4 +84,9 @@ label {
 /*** MAIN GRID ***/
 main {
 	display: grid;
+}
+
+/*** RESULTS STYLES ***/
+.results .wrapper {
+	display: flex;
 }
