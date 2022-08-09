@@ -10,7 +10,7 @@ function App() {
     return (
         <>
             <Header />
-            <main>
+            <main className="wrapper">
                 <Income />
                 <Results />
                 <Expenses />
