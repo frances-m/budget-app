@@ -2,16 +2,22 @@ const Results = ({ totalIncome, totalExpenses, netIncome }) => {
 
     return (
         <section className="results">
-            <div className="totals">
-                <h3>Total Income</h3>
-                <p className="total"><span>$</span>{totalIncome.toLocaleString()}</p>
-                <h3>Total Expenses</h3>
-                <p className="total"><span>$</span>{totalExpenses.toLocaleString()}</p>
-            </div>
-            <div className="net-income">
+
+            <div className="netIncome">
                 <h2>Net Income</h2>
                 <p className="net"><span>$</span>{netIncome.toLocaleString()}</p>
             </div>
+
+            <div className="total totalIncome">
+                <h3>Total Income</h3>
+                <p><span>$</span>{totalIncome.toLocaleString()}</p>
+            </div>
+
+            <div className="total totalExpenses">
+                <h3>Total Expenses</h3>
+                <p><span>$</span>{totalExpenses.toLocaleString()}</p>
+            </div>
+
         </section>
     )
 }
