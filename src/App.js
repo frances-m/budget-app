@@ -101,10 +101,25 @@ function App() {
 
     const save = () => {
         const database = getDatabase(firebase);
-        const dbIncome = ref(database, '/income');
-        const dbExpenses = ref(database, '/expenses');
-        set(dbIncome, income);
-        set(dbExpenses, expenses);
+        const dbRef = ref(database);
+
+        const saveIconEl = document.querySelector('.saveIcon');
+        const successIconEl = document.querySelector('.successIcon');
+
+        saveIconEl.classList.toggle('show');
+        successIconEl.classList.toggle('show');
+
+        set(dbRef, {income, expenses})
+            .then(() => {
+                setTimeout(() => {
+                    saveIconEl.classList.toggle('show');
+                    successIconEl.classList.toggle('show');
+                }, 2000)
+                
+            })
+            .catch((err) => {
+                alert('failed to save! please try again later.');
+            });
     }
 
     return (
