@@ -15,14 +15,63 @@ function App() {
         wages: 0,
         otherIncome: 0
     });
-    const [expenses, setExpenses] = useState({
-        rent: 0,
-        utilities: 0
-    });
+
+    const [expenses, setExpenses] = useState([
+        {
+            categoryName: "Housing",
+            subcategories: [
+                {name: "Rent", id: "housing-1", index: 0},
+                {name: "Utilities", id: "housing-2", index: 1},
+                {name: "Internet", id: "housing-3", index: 2},
+                {name: "Phone", id: "housing-4", index: 3}
+            ],
+            id: 0
+        },
+        {
+            categoryName: "Transportation",
+            subcategories: [
+                {name: "Car Payment", id: "transportation-1", index: 0},
+                {name: "Gas / Fuel", id: "transportation-2", index: 1},
+                {name: "Car Insurance", id: "transportation-3", index: 2},
+                {name: "Car Repairs", id: "transportation-4", index: 3},
+                {name: "Transit / Rideshare", id: "transportation-5", index: 4},
+            ],
+            id: 1
+        },
+        {
+            categoryName: "Education",
+            subcategories: [
+                {name: "Student Loan", id: "education-1", index: 0},
+                {name: "Tuition", id: "education-2", index: 1}
+            ],
+            id: 2
+        },
+        {
+            categoryName: "Personal",
+            subcategories: [
+                {name: "Groceries", id: "personal-1", index: 0},
+                {name: "Clothing", id: "personal-2", index: 1},
+                {name: "Entertainment", id: "personal-3", index: 2},
+                {name: "Medical", id: "personal-4", index: 3},
+                {name: "Pet Supplies", id: "personal-5", index: 4},
+            ],
+            id: 3
+        },
+        {
+            categoryName: "Other",
+            subcategories: [
+                {name: "Other", id: "other-1", index: 0}
+            ],
+            id: 4
+        }
+    ]);
+
+    const [expenseValues, setExpenseValues] = useState([[0,0,0,0],[0,0,0,0,0],[0,0],[0,0,0,0,0],[0]]);
 
     const [totalIncome, setTotalIncome] = useState("$0");
     const [totalExpenses, setTotalExpenses] = useState("$0");
     const [netIncome, setNetIncome] = useState("$0");
+
 
     useEffect(() => {
         let calcIncome = 0;
@@ -32,14 +81,16 @@ function App() {
             calcIncome += Number(income[key]);
         }
 
-        for (let key in expenses) {
-            calcExpenses += Number(expenses[key]);
-        }
+        expenseValues.forEach((category) => {
+            category.forEach((value) => {
+                calcExpenses += value;
+            })
+        })
 
         setTotalIncome(calcIncome);
         setTotalExpenses(calcExpenses);
         setNetIncome(calcIncome - calcExpenses);
-    }, [income, expenses]);
+    }, [income, expenseValues]);
 
     useEffect(() => {
         const database = getDatabase(firebase);
@@ -49,13 +100,13 @@ function App() {
             const data = response.val();
             setIncome(data.income);
             setExpenses(data.expenses);
+            setExpenseValues(data.expenseValues);
         })
     }, []);
 
-    const handleInputChange = (e) => {
-        const key = e.target.name;
+    const handleInputChange = (e, needKey = true) => {
         let value;
-
+        
         if (e.target.value !== "$") {
             value = Number(e.target.value.replace(/[,$]/g, ''));
         } 
@@ -63,12 +114,16 @@ function App() {
         if (!value) {
             value = 0;
         }
-
+        
         if (value > 99999) {
             return;
         }
-
-        return [key, value];
+        if (needKey) {
+            const key = e.target.name;
+            return [key, value];
+        } else {
+            return value;
+        }
     }
 
     const updateIncome = (e) => {
@@ -85,18 +140,26 @@ function App() {
         }
     }
 
-    const updateExpenses = (e) => {
-        try {
-            const [key, value] = handleInputChange(e);
-    
-            setExpenses(prev => ({
-                ...prev,
-                [key]: value
-            }));
+    const updateExpenses = (e, categoryIndex, subcategoryIndex) => {
+        const value = handleInputChange(e, false);
+        let i = 0;
 
-        } catch (err) {
+        if (value === undefined) {
             return;
         }
+
+        setExpenseValues(prev => {
+            return prev.map((categoryValue) => {
+                if (i === categoryIndex) {
+                    console.log(value);
+                    categoryValue[subcategoryIndex] = value;
+                    i++
+                } else {
+                    i++;
+                }
+                return categoryValue;
+            })
+        })
     }
 
     const save = () => {
@@ -109,7 +172,7 @@ function App() {
         saveIconEl.classList.toggle('show');
         successIconEl.classList.toggle('show');
 
-        set(dbRef, {income, expenses})
+        set(dbRef, {income, expenses, expenseValues})
             .then(() => {
                 setTimeout(() => {
                     saveIconEl.classList.toggle('show');
@@ -128,10 +191,11 @@ function App() {
             <main className="wrapper">
                 <Income income={income} updateIncome={updateIncome} />
                 <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
-                <Expenses expenses={expenses} updateExpenses={updateExpenses} />
+                <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
             </main>
         </>
     );
 }
+
 
 export default App;

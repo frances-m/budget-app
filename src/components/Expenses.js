@@ -1,18 +1,28 @@
-const Expenses = ({ expenses, updateExpenses }) => {
+
+
+const Expenses = ({ expenses, updateExpenses, expenseValues }) => {
 
     return (
         <section className="expenses">
             <h2>Expenses</h2>
             <form action="">
-                <div className="input-container">
-                    <label htmlFor="rent">rent</label>
-                    <input type="text" name="rent" id="rent" value={`$${expenses.rent.toLocaleString()}`} onChange={updateExpenses} />
-                </div>
-
-                <div className="input-container">
-                    <label htmlFor="utilities">utilities</label>
-                    <input type="text" name="utilities" id="utilities" value={`$${expenses.utilities.toLocaleString()}`} onChange={updateExpenses} />
-                </div>
+                { expenses.map((category) => {
+                    return (
+                        <fieldset key={category.id}>
+                            <h3>{category.categoryName}</h3>
+                            {
+                                category.subcategories.map((subcategory) => {
+                                    return (
+                                        <div className="input-container" key={subcategory.id}>
+                                            <label htmlFor={subcategory.name}>{subcategory.name}</label>
+                                            <input type="text" name={subcategory.name} id={subcategory.name} value={`$${expenseValues[category.id][subcategory.index].toLocaleString()}`} onChange={event => updateExpenses(event, category.id, subcategory.index)} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </fieldset>
+                    )
+                })}
             </form>
         </section>
     )

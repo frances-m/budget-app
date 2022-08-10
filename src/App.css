@@ -94,7 +94,13 @@ button {
 	opacity: 1 !important;
 }
 
-/*** INPUT STYLES ***/
+/*** INPUT & FORM STYLES ***/
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
 .input-container {
 	position: relative;
 }
