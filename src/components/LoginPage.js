@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import firebase from "../firebase";
-import { getDatabase, ref, push, onValue } from "firebase/database";
+import { getDatabase, ref, push, onValue, get, child } from "firebase/database";
 
 import CreateAccount from "./CreateAccount";
 import Login from "./Login";
@@ -43,9 +43,32 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
     const createAccount = (e) => {
         e.preventDefault();
         const database = getDatabase(firebase);
-        const dbRef = ref(database, '/users');
+        const dbRef = ref(database);
 
-        push(dbRef, {"username": newUsername, "password": newPassword});
+        const usernames = [];
+        get(child(dbRef, '/users')).then((response) => {
+
+            let users = response.val();
+
+            for (let user in users) {
+                usernames.push(users[user].username);
+            }
+
+            const newUsernameErrorEl = document.querySelector("#newUsernameError");
+            console.log(usernames);
+            if (usernames.includes(newUsername)) {
+                console.log('error');
+                newUsernameErrorEl.classList.add('show');
+                return;
+            } else {
+                console.log('success');
+                newUsernameErrorEl.classList.remove('show');
+                push(dbRef, {"username": newUsername, "password": newPassword});
+                return;
+            }
+        });
+        
+
     }
 
     const login = (e) => {

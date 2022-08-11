@@ -3,7 +3,11 @@ const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, ne
         <form onSubmit={createAccount} className="loginForm" action="">
             <h2>Create a New Account</h2>
             <div className="inputContainer">
-                <label htmlFor="newUsername">username</label>
+                <div className="inputLabel">
+                    <label htmlFor="newUsername">username</label>
+                    <p className="errorMessage" id="newUsernameError">username not available</p>
+                </div>
+
                 <input value={newUsername} onChange={updateLoginInputs} type="text" name="newUsername" id="newUsername" />
             </div>
             <div className="inputContainer">

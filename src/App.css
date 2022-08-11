@@ -90,6 +90,15 @@ button {
 	cursor: pointer;
 }
 
+.errorMessage {
+	display: none;
+	color: rgb(251, 70, 70);
+}
+
+.errorMessage.show {
+	display: block !important;
+}
+
 .show {
 	opacity: 1 !important;
 }
@@ -186,12 +195,6 @@ header .successIcon {
 	
 	opacity: 0;
 }
-
-/* .loggedIn {
-	display: flex;
-	align-items: end;
-	font-size: 1.2rem;
-} */
 
 
 /*** MAIN GRID ***/
@@ -322,6 +325,12 @@ main {
 	padding: 0 0 5px 20px;
 
 	font-size: 1rem;
+}
+
+.loginForm .inputLabel {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .loginSubmit{
