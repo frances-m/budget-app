@@ -238,12 +238,12 @@ main {
 } 
 
 /*** LOGIN PAGE ***/
-.loginPage {
+.loginScreen {
 	position: fixed;
 	top: 0;
 	left: 0;
 
-	display: flex;
+	display: none;
 	align-items: center;
 	justify-content: center;
 	width: 100vw;
@@ -259,8 +259,8 @@ main {
 	border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
-.loginPage.show {
-	display: none;
+.loginScreen.show {
+	display: flex;
 }
 
 .login {
@@ -335,7 +335,7 @@ main {
 	color: white;
 }
 
-.loginNewAccount button {
+.loginNotice button {
 	font-size: .9rem;
 	padding: 0;
 }

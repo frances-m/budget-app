@@ -104,7 +104,12 @@ function App() {
             setIncome(data.income);
             setExpenses(data.expenses);
             setExpenseValues(data.expenseValues);
-        })
+        });
+
+        if (window.localStorage.userId) {
+            // setUserId(window.localStorage.userId);
+            // setIsLoggedIn(true);
+        }
     }, []);
 
     const handleInputChange = (e, needKey = true) => {
@@ -187,15 +192,25 @@ function App() {
             });
     }
 
-    const login = () => {
+    const toggleLoginPage = () => {
+        const loginPageEl = document.querySelector('.loginScreen');
+        loginPageEl.classList.toggle('show');
+    }
+
+    const updateUserId = (username) => {
+        if (window.localStorage) {
+            window.localStorage.userId = username;
+        }
+        setUserId(username);
         setIsLoggedIn(true);
+        console.log(userId);
     }
 
     return (
         <>
-            <Header save={save} login={login} isLoggedIn={isLoggedIn} />
+            <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} />
             <main className="wrapper">
-                <LoginPage />
+                <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />
                 <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
                 <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />

@@ -1,4 +1,4 @@
-const Header = ({ save, login, isLoggedIn }) => {
+const Header = ({ save, toggleLoginPage, isLoggedIn }) => {
 
     return (
         <header>
@@ -6,7 +6,7 @@ const Header = ({ save, login, isLoggedIn }) => {
                 <h1>Site Heading</h1>
                 <div className="btnContainer">
                     {!isLoggedIn ? 
-                        <button className="loginBtn" onClick={login} type="button">Login</button> : 
+                        <button className="loginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
                         <div className="loggedIn">
                             {/* <p>Hey, username!</p> */}
                             <button className="saveBtn" onClick={save} type="button" >
