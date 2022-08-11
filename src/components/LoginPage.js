@@ -56,7 +56,6 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
         onValue(dbRef, (response) => {
             let users = response.val();
             for (let user in users) {
-                console.log(user, users, users[user])
                 if (users[user].username === username && users[user].password === password) {
                     updateUserId(username);
                     toggleLoginPage();

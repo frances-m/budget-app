@@ -95,20 +95,26 @@ function App() {
         setNetIncome(calcIncome - calcExpenses);
     }, [income, expenseValues]);
 
-    useEffect(() => {
+    const updateUserInfo = (username = userId) => {
         const database = getDatabase(firebase);
-        const dbRef = ref(database);
+        const dbRef = ref(database, `${username}/`);
 
         onValue(dbRef, (response) => {
-            const data = response.val();
-            setIncome(data.income);
-            setExpenses(data.expenses);
-            setExpenseValues(data.expenseValues);
+            if (response.exists()) {
+                const data = response.val();
+                setIncome(data.income);
+                setExpenses(data.expenses);
+                setExpenseValues(data.expenseValues);
+            }
         });
 
+    };
+    
+    useEffect(() => {
         if (window.localStorage.userId) {
             // setUserId(window.localStorage.userId);
             // setIsLoggedIn(true);
+            //updateUserInfo();
         }
     }, []);
 
@@ -171,7 +177,7 @@ function App() {
 
     const save = () => {
         const database = getDatabase(firebase);
-        const dbRef = ref(database);
+        const dbRef = ref(database, `${userId}/`);
 
         const saveIconEl = document.querySelector('.saveIcon');
         const successIconEl = document.querySelector('.successIcon');
@@ -201,9 +207,10 @@ function App() {
         if (window.localStorage) {
             window.localStorage.userId = username;
         }
+
         setUserId(username);
         setIsLoggedIn(true);
-        console.log(userId);
+        updateUserInfo(username);
     }
 
     return (
