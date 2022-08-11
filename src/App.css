@@ -151,7 +151,7 @@ header .wrapper {
 }
 
 .saveBtn:hover > .saveIcon {
-	fill: palevioletred;
+	fill: #FF9595;
 }
 
 .saveBtn {
@@ -164,7 +164,7 @@ header .wrapper {
 	border-radius: 5px;
 
 	color: white;
-	background-color: palevioletred;
+	background-color: #FF9595;
 
 	font-size: 1rem;
 
@@ -172,7 +172,7 @@ header .wrapper {
 }
 
 .loginBtn:hover {
-	background-color: rgb(220, 126, 157);
+	background-color: #ff7878;
 }
 
 header svg {
