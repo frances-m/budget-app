@@ -4,6 +4,7 @@ import firebase from './firebase';
 import { getDatabase, onValue, ref, set } from 'firebase/database';
 
 import Header from './components/Header';
+import LoginPage from './components/LoginPage';
 import Income from './components/Income';
 import Expenses from './components/Expenses';
 import Results from './components/Results';
@@ -72,6 +73,8 @@ function App() {
     const [totalExpenses, setTotalExpenses] = useState("$0");
     const [netIncome, setNetIncome] = useState("$0");
 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userId, setUserId] = useState("");
 
     useEffect(() => {
         let calcIncome = 0;
@@ -151,7 +154,6 @@ function App() {
         setExpenseValues(prev => {
             return prev.map((categoryValue) => {
                 if (i === categoryIndex) {
-                    console.log(value);
                     categoryValue[subcategoryIndex] = value;
                     i++
                 } else {
@@ -185,10 +187,15 @@ function App() {
             });
     }
 
+    const login = () => {
+        setIsLoggedIn(true);
+    }
+
     return (
         <>
-            <Header save={save} />
+            <Header save={save} login={login} isLoggedIn={isLoggedIn} />
             <main className="wrapper">
+                <LoginPage />
                 <Income income={income} updateIncome={updateIncome} />
                 <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
                 <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />

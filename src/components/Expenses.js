@@ -13,7 +13,7 @@ const Expenses = ({ expenses, updateExpenses, expenseValues }) => {
                             {
                                 category.subcategories.map((subcategory) => {
                                     return (
-                                        <div className="input-container" key={subcategory.id}>
+                                        <div className="inputContainer" key={subcategory.id}>
                                             <label htmlFor={subcategory.name}>{subcategory.name}</label>
                                             <input type="text" name={subcategory.name} id={subcategory.name} value={`$${expenseValues[category.id][subcategory.index].toLocaleString()}`} onChange={event => updateExpenses(event, category.id, subcategory.index)} />
                                         </div>
