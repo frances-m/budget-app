@@ -3,7 +3,7 @@ const Header = ({ save, toggleLoginPage, isLoggedIn }) => {
     return (
         <header>
             <div className="wrapper">
-                <h1>Site Heading</h1>
+                <h1>Moneta</h1>
                 <div className="btnContainer">
                     {!isLoggedIn ? 
                         <button className="loginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
