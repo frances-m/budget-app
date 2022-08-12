@@ -10,6 +10,7 @@ import Expenses from './components/Expenses';
 import Results from './components/Results';
 
 import './App.css';
+import MobileResults from './components/MobileResults';
 
 function App() {
     const [income, setIncome] = useState({
@@ -48,7 +49,7 @@ function App() {
             id: 2
         },
         {
-            categoryName: "Personal",
+            categoryName: "Personal & Household",
             subcategories: [
                 {name: "Groceries", id: "personal-1", index: 0},
                 {name: "Clothing", id: "personal-2", index: 1},
@@ -76,6 +77,8 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState("");
 
+    const [isMobileView, setIsMobileView] = useState(false);
+
     useEffect(() => {
         let calcIncome = 0;
         let calcExpenses = 0;
@@ -94,6 +97,26 @@ function App() {
         setTotalExpenses(calcExpenses);
         setNetIncome(calcIncome - calcExpenses);
     }, [income, expenseValues]);
+    
+    useEffect(() => {
+        checkWindowSize();
+
+        if (window.localStorage.userId) {
+            // setUserId(window.localStorage.userId);
+            // setIsLoggedIn(true);
+            //updateUserInfo();
+        }
+    }, []);
+
+    const checkWindowSize = () => {
+        if (window.innerWidth <= 687) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    }
+
+    window.addEventListener('resize', checkWindowSize);
 
     const updateUserInfo = (username = userId) => {
         const database = getDatabase(firebase);
@@ -109,14 +132,6 @@ function App() {
         });
 
     };
-    
-    useEffect(() => {
-        if (window.localStorage.userId) {
-            // setUserId(window.localStorage.userId);
-            // setIsLoggedIn(true);
-            //updateUserInfo();
-        }
-    }, []);
 
     const handleInputChange = (e, needKey = true) => {
         let value;
@@ -215,11 +230,17 @@ function App() {
 
     return (
         <>
-            <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} />
+            {isMobileView ? 
+                <MobileResults totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} /> :
+                <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
+            }
             <main className="wrapper">
                 <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />
-                <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
+                {isMobileView ?
+                    '' :
+                    <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
+                }
                 <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
             </main>
         </>

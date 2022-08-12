@@ -2,7 +2,6 @@ const Results = ({ totalIncome, totalExpenses, netIncome }) => {
 
     return (
         <section className="results">
-
             <div className="netIncome">
                 <h2>Net Income</h2>
                 <p className="net"><span>$</span>{netIncome.toLocaleString()}</p>
@@ -17,7 +16,6 @@ const Results = ({ totalIncome, totalExpenses, netIncome }) => {
                 <h3>Total Expenses</h3>
                 <p><span>$</span>{totalExpenses.toLocaleString()}</p>
             </div>
-
         </section>
     )
 }
