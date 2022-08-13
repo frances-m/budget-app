@@ -167,12 +167,10 @@ header .wrapper {
 }
 
 .loginBtn {
-	height: 40px;
-	padding: 0 10px;
-	border-radius: 5px;
+	padding: 0 0 5px 0;
+	margin-right: 10px;
 
-	color: white;
-	background-color: #FF9595;
+	color: black;
 
 	font-size: 1rem;
 
@@ -180,7 +178,9 @@ header .wrapper {
 }
 
 .loginBtn:hover {
-	background-color: #ff7878;
+	position: relative;
+	top: 1.5px;
+	border-bottom: 3px solid black;
 }
 
 header svg {
@@ -285,7 +285,8 @@ main {
 .login {
 	width: 90vw;
 	max-width: 800px;
-	height: 600px;
+	height: 90vh;
+	max-height: 600px;
 	border-radius: 20px;
 	
 	background-color: white;
@@ -295,7 +296,7 @@ main {
 .login h2 {
 	font-size: 2rem;
 	font-weight: 700;
-	margin: 20px 0 50px 0;
+	margin: 40px 0 30px 0;
 }
 
 .loginWrapper {
@@ -325,6 +326,8 @@ main {
 }
 
 .loginForm input {
+	width: 100%;
+	margin: 0 0 10px 0;
 	text-align: left;
 	font-weight: 500;
 }
@@ -332,13 +335,15 @@ main {
 .loginForm .inputContainer {
 	display: flex;
 	flex-direction: column;
+	width: 90%;
+	max-width: 400px;
 }
 
 .loginForm label {
 	position: static;
 
 	height: auto;
-	padding: 0 0 5px 20px;
+	padding: 0 0 4px 20px;
 
 	font-size: 1rem;
 }
@@ -350,19 +355,24 @@ main {
 }
 
 .loginSubmit{
-	width: 100%;
+	width: 90%;
 	height: 45px;
 	max-width: 400px;
-	margin: 40px 0 20px 0;
+	margin: 20px 0 40px 0;
 	border-radius: 38px;
 
 	background-color: black;
 	color: white;
 }
 
+.loginNotice {
+	
+	text-align: center;
+}
+
 .loginNotice button {
-	font-size: .9rem;
 	padding: 0;
+	font-size: .9rem;
 }
 
 @media (max-width: 860px ) {
