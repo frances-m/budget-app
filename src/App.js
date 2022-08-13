@@ -8,9 +8,10 @@ import LoginPage from './components/LoginPage';
 import Income from './components/Income';
 import Expenses from './components/Expenses';
 import Results from './components/Results';
+import MobileResults from './components/MobileResults';
+import MobileNav from './components/MobileNav';
 
 import './App.css';
-import MobileResults from './components/MobileResults';
 
 function App() {
     const [income, setIncome] = useState({
@@ -229,21 +230,28 @@ function App() {
     }
 
     return (
-        <>
-            {isMobileView ? 
-                <MobileResults totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} /> :
-                <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
-            }
-            <main className="wrapper">
-                <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
-                <Income income={income} updateIncome={updateIncome} />
-                {isMobileView ?
-                    '' :
+        !isMobileView ? (
+            <>
+                <header>
+                    <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
+                </header>
+                <main className="wrapper">
+                    <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
+                    <Income income={income} updateIncome={updateIncome} />
                     <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
-                }
-                <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
-            </main>
-        </>
+                    <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
+                </main>
+            </>
+        ) :
+            <>
+                <MobileResults totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} /> 
+                <MobileNav /> 
+                <main className="wrapper">
+                    <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
+                    <Income income={income} updateIncome={updateIncome} />
+                    <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
+                </main>
+            </>
     );
 }
 
