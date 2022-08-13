@@ -1,6 +1,6 @@
 import Header from "./Header";
 
-const MobileNav = () => {
+const MobileNav = ({ save, toggleLoginPage, isLoggedIn }) => {
     const toggleMobileNav = () => {
         const navEl = document.querySelector('nav');
         const navBtnEl = document.querySelector('.mobileNavBtn');
@@ -16,7 +16,7 @@ const MobileNav = () => {
                 </span>
             </button>
             <section className="sidebar">
-                <Header />
+                <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} />
             </section>
         </nav>
     )

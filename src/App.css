@@ -587,7 +587,7 @@ footer a {
 	nav {
 		top: 2.5vh;
 		left: unset;
-		right: -300px;
+		right: -90vw;
 
 		width: 90vw;
 		height: 95vh;

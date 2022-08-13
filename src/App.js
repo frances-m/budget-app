@@ -249,7 +249,7 @@ function App() {
         ) :
             <>
                 <MobileResults totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} /> 
-                <MobileNav /> 
+                <MobileNav save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
                 <main className="wrapper">
                     <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
                     <Income income={income} updateIncome={updateIncome} />

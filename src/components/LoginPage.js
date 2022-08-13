@@ -44,6 +44,7 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
         e.preventDefault();
         const database = getDatabase(firebase);
         const dbRef = ref(database);
+        const usersRef = ref(database, '/users');
 
         const usernames = [];
         get(child(dbRef, '/users')).then((response) => {
@@ -57,13 +58,11 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
             const newUsernameErrorEl = document.querySelector("#newUsernameError");
             console.log(usernames);
             if (usernames.includes(newUsername)) {
-                console.log('error');
                 newUsernameErrorEl.classList.add('show');
                 return;
             } else {
-                console.log('success');
                 newUsernameErrorEl.classList.remove('show');
-                push(dbRef, {"username": newUsername, "password": newPassword});
+                push(usersRef, {"username": newUsername, "password": newPassword});
                 return;
             }
         });
