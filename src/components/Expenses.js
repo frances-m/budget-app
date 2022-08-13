@@ -15,7 +15,13 @@ const Expenses = ({ expenses, updateExpenses, expenseValues }) => {
                                     return (
                                         <div className="inputContainer" key={subcategory.id}>
                                             <label htmlFor={subcategory.name}>{subcategory.name}</label>
-                                            <input type="text" name={subcategory.name} id={subcategory.name} value={`$${expenseValues[category.id][subcategory.index].toLocaleString()}`} onChange={event => updateExpenses(event, category.id, subcategory.index)} />
+                                            <input 
+                                            type="text" 
+                                            name={subcategory.name} 
+                                            id={subcategory.name} 
+                                            value={`$${expenseValues[category.id][subcategory.index].toLocaleString()}`} 
+                                            onChange={event => updateExpenses(event, category.id, subcategory.index)}
+                                            inputMode="numeric" />
                                         </div>
                                     )
                                 })
