@@ -12,6 +12,7 @@ import MobileResults from './components/MobileResults';
 import MobileNav from './components/MobileNav';
 
 import './App.css';
+import Nav from './components/Nav';
 
 function App() {
     const [income, setIncome] = useState({
@@ -110,7 +111,7 @@ function App() {
     }, []);
 
     const checkWindowSize = () => {
-        if (window.innerWidth <= 687) {
+        if (window.innerWidth <= 580) {
             setIsMobileView(true);
         } else {
             setIsMobileView(false);
@@ -232,8 +233,11 @@ function App() {
     return (
         !isMobileView ? (
             <>
+                <Nav />
                 <header>
-                    <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
+                    <div className="wrapper">
+                        <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
+                    </div>
                 </header>
                 <main className="wrapper">
                     <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
