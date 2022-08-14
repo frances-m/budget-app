@@ -101,28 +101,29 @@ function App() {
     }, [income, expenseValues]);
     
     useEffect(() => {
-        checkWindowSize();
+        const checkWindowSize = () => {
+            if (window.innerWidth <= 580) {
+                setIsMobileView(true);
+            } else {
+                setIsMobileView(false);
+            }
+        }
+    
+        window.addEventListener('resize', checkWindowSize);
 
         if (window.localStorage.userId) {
-            // setUserId(window.localStorage.userId);
-            // setIsLoggedIn(true);
-            //updateUserInfo();
+            setUserId(window.localStorage.userId);
+            setIsLoggedIn(true);
         }
     }, []);
 
-    const checkWindowSize = () => {
-        if (window.innerWidth <= 580) {
-            setIsMobileView(true);
-        } else {
-            setIsMobileView(false);
+    useEffect(() => {
+        if (userId === "") {
+            return;
         }
-    }
-
-    window.addEventListener('resize', checkWindowSize);
-
-    const updateUserInfo = (username = userId) => {
+        
         const database = getDatabase(firebase);
-        const dbRef = ref(database, `${username}/`);
+        const dbRef = ref(database, `${userId}/`);
 
         onValue(dbRef, (response) => {
             if (response.exists()) {
@@ -133,7 +134,12 @@ function App() {
             }
         });
 
-    };
+        if (window.localStorage.userId) {
+            setUserId(window.localStorage.userId);
+        }
+    
+    }, [userId]);
+
 
     const handleInputChange = (e, needKey = true) => {
         let value;
@@ -221,13 +227,8 @@ function App() {
     }
 
     const updateUserId = (username) => {
-        if (window.localStorage) {
-            window.localStorage.userId = username;
-        }
-
         setUserId(username);
         setIsLoggedIn(true);
-        updateUserInfo(username);
     }
 
     return (

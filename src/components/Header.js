@@ -7,13 +7,17 @@ const Header = ({ save, toggleLoginPage, isLoggedIn }) => {
                 {!isLoggedIn ? 
                     <button className="loginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
                     <div className="loggedIn">
-                        {/* <p>Hey, username!</p> */}
-                        <button className="saveBtn" onClick={save} type="button" >
-                            <span class="saveIcon show material-symbols-outlined">
+                        <button className="saveBtn" onClick={save} type="button" aria-label="save current budget" >
+                            <span className="saveIcon show material-symbols-outlined">
                                 save
                             </span>
-                            <span class="successIcon material-symbols-outlined">
+                            <span className="successIcon material-symbols-outlined">
                                 check_circle
+                            </span>
+                        </button>
+                        <button className="userBtn" type="button" >
+                            <span className="material-symbols-outlined">
+                                account_circle
                             </span>
                         </button>
                     </div>

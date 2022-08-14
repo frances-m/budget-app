@@ -222,7 +222,7 @@ header .material-symbols-outlined {
 	width: 35px;
 	height: 35px;
 
-	color: lightgreen;
+	color: #00aa5e;
 	
 	font-variation-settings:
 	'FILL' 1,
@@ -231,6 +231,7 @@ header .material-symbols-outlined {
 	'opsz' 40;
 
 	opacity: 0;
+	transition: .5s;
 }
 
 
@@ -323,9 +324,10 @@ main {
 }
 
 .login h2 {
+	margin: 40px 0 30px 0;
 	font-size: 2rem;
 	font-weight: 700;
-	margin: 40px 0 30px 0;
+	text-align: center;
 }
 
 .loginWrapper {
