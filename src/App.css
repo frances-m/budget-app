@@ -442,6 +442,14 @@ main {
 	align-items: center;
 }
 
+.visibilityBtn {
+	position: absolute;
+	right: 15px;
+	bottom: 13px;
+
+	padding: 0 10px;
+}
+
 .loginSubmit{
 	width: 90%;
 	height: 45px;

@@ -20,7 +20,7 @@ const Header = ({ save, toggleLoginPage, isLoggedIn, logout, deleteAccount }) =>
                                 check_circle
                             </span>
                         </button>
-                        <button className="userBtn" onClick={toggleUserMenu} type="button" >
+                        <button className="userBtn" onClick={toggleUserMenu} type="button" aria-label="toggle user menu" >
                             <span className="material-symbols-outlined show">
                                 account_circle
                             </span>

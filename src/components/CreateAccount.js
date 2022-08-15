@@ -1,4 +1,12 @@
+import { useState } from "react";
+
 const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, newPassword, updateLoginInputs }) => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    }
+
     return (
         <form onSubmit={createAccount} className="loginForm" action="">
             <h2>Create a New Account</h2>
@@ -12,7 +20,15 @@ const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, ne
             </div>
             <div className="inputContainer">
                 <label htmlFor="newPassword">password</label>
-                <input value={newPassword} onChange={updateLoginInputs} type="newPassword" name="newPassword" id="newPassword" />
+                <input value={newPassword} onChange={updateLoginInputs} type={isPasswordVisible ? "text" : "password"} name="newPassword" id="newPassword" />
+                <button className="visibilityBtn" onClick={togglePasswordVisibility} type="button" aria-label="toggle password visibility">
+                    {
+                        isPasswordVisible ?
+                            <span className="material-symbols-outlined">visibility_off</span> : 
+                            <span className="material-symbols-outlined">visibility</span>
+                        
+                    }
+                </button>
             </div>
             <button className="loginSubmit" type="submit">Submit</button>
             <p className="loginNotice">Already have an account? <button type="button" onClick={toggleCreateAccountPage} >click here to login</button></p>
