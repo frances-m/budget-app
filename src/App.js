@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import firebase from './firebase';
-import { getDatabase, onValue, ref, set } from 'firebase/database';
+import { getDatabase, onValue, ref, set, remove, get, child } from 'firebase/database';
 
 import Header from './components/Header';
 import LoginPage from './components/LoginPage';
@@ -14,63 +14,70 @@ import MobileNav from './components/MobileNav';
 import './App.css';
 import Nav from './components/Nav';
 
+const initalIncome = {
+    wages: 0,
+    otherIncome: 0
+};
+
+const initialExpenses = [
+    {
+        categoryName: "Housing",
+        subcategories: [
+            {name: "Rent", id: "housing-1", index: 0},
+            {name: "Utilities", id: "housing-2", index: 1},
+            {name: "Internet", id: "housing-3", index: 2},
+            {name: "Phone", id: "housing-4", index: 3}
+        ],
+        id: 0
+    },
+    {
+        categoryName: "Transportation",
+        subcategories: [
+            {name: "Car Payment", id: "transportation-1", index: 0},
+            {name: "Gas / Fuel", id: "transportation-2", index: 1},
+            {name: "Car Insurance", id: "transportation-3", index: 2},
+            {name: "Car Repairs", id: "transportation-4", index: 3},
+            {name: "Transit / Rideshare", id: "transportation-5", index: 4},
+        ],
+        id: 1
+    },
+    {
+        categoryName: "Education",
+        subcategories: [
+            {name: "Student Loan", id: "education-1", index: 0},
+            {name: "Tuition", id: "education-2", index: 1}
+        ],
+        id: 2
+    },
+    {
+        categoryName: "Personal & Household",
+        subcategories: [
+            {name: "Groceries", id: "personal-1", index: 0},
+            {name: "Clothing", id: "personal-2", index: 1},
+            {name: "Entertainment", id: "personal-3", index: 2},
+            {name: "Medical", id: "personal-4", index: 3},
+            {name: "Pet Supplies", id: "personal-5", index: 4},
+        ],
+        id: 3
+    },
+    {
+        categoryName: "Other",
+        subcategories: [
+            {name: "Other", id: "other-1", index: 0}
+        ],
+        id: 4
+    }
+];
+
+const initialExpenseValues = [[0,0,0,0],[0,0,0,0,0],[0,0],[0,0,0,0,0],[0]];
+
+
 function App() {
-    const [income, setIncome] = useState({
-        wages: 0,
-        otherIncome: 0
-    });
+    const [income, setIncome] = useState(initalIncome);
 
-    const [expenses, setExpenses] = useState([
-        {
-            categoryName: "Housing",
-            subcategories: [
-                {name: "Rent", id: "housing-1", index: 0},
-                {name: "Utilities", id: "housing-2", index: 1},
-                {name: "Internet", id: "housing-3", index: 2},
-                {name: "Phone", id: "housing-4", index: 3}
-            ],
-            id: 0
-        },
-        {
-            categoryName: "Transportation",
-            subcategories: [
-                {name: "Car Payment", id: "transportation-1", index: 0},
-                {name: "Gas / Fuel", id: "transportation-2", index: 1},
-                {name: "Car Insurance", id: "transportation-3", index: 2},
-                {name: "Car Repairs", id: "transportation-4", index: 3},
-                {name: "Transit / Rideshare", id: "transportation-5", index: 4},
-            ],
-            id: 1
-        },
-        {
-            categoryName: "Education",
-            subcategories: [
-                {name: "Student Loan", id: "education-1", index: 0},
-                {name: "Tuition", id: "education-2", index: 1}
-            ],
-            id: 2
-        },
-        {
-            categoryName: "Personal & Household",
-            subcategories: [
-                {name: "Groceries", id: "personal-1", index: 0},
-                {name: "Clothing", id: "personal-2", index: 1},
-                {name: "Entertainment", id: "personal-3", index: 2},
-                {name: "Medical", id: "personal-4", index: 3},
-                {name: "Pet Supplies", id: "personal-5", index: 4},
-            ],
-            id: 3
-        },
-        {
-            categoryName: "Other",
-            subcategories: [
-                {name: "Other", id: "other-1", index: 0}
-            ],
-            id: 4
-        }
-    ]);
+    const [expenses, setExpenses] = useState(initialExpenses);
 
-    const [expenseValues, setExpenseValues] = useState([[0,0,0,0],[0,0,0,0,0],[0,0],[0,0,0,0,0],[0]]);
+    const [expenseValues, setExpenseValues] = useState(initialExpenseValues);
 
     const [totalIncome, setTotalIncome] = useState("$0");
     const [totalExpenses, setTotalExpenses] = useState("$0");
@@ -118,10 +125,14 @@ function App() {
     }, []);
 
     useEffect(() => {
-        if (userId === "") {
+        if (window.localStorage) {
+            window.localStorage.userId = userId;
+        }
+
+        if (!userId) {
             return;
         }
-        
+
         const database = getDatabase(firebase);
         const dbRef = ref(database, `${userId}/`);
 
@@ -133,11 +144,6 @@ function App() {
                 setExpenseValues(data.expenseValues);
             }
         });
-
-        if (window.localStorage.userId) {
-            setUserId(window.localStorage.userId);
-        }
-    
     }, [userId]);
 
 
@@ -231,13 +237,53 @@ function App() {
         setIsLoggedIn(true);
     }
 
+    const logout = () => {
+        setIncome(initalIncome);
+        setExpenses(initialExpenses);
+        setExpenseValues(initialExpenseValues);
+
+        setUserId("");
+        setIsLoggedIn(false);
+    }
+
+    const deleteAccount = () => {
+        const isConfirmed = window.confirm('Are you sure you want to delete you account?');
+        
+        if (isConfirmed) {
+
+            const database = getDatabase(firebase);
+            const userIdRef = ref(database, `${userId}/`);
+            remove(userIdRef);
+
+
+            const dbRef = ref(database);
+            const usersRef = ref(database, '/users');
+
+            get(child(dbRef, '/users')).then((response) => {
+                
+                const users = response.val();
+                const newUsersObject = {};
+
+                for (let user in users) {
+                    if (users[user].username !== userId) {
+                        newUsersObject[user] = users[user];
+                    }
+                }
+                
+                set(usersRef, newUsersObject);
+            });
+
+            logout();
+        }
+    }
+
     return (
         !isMobileView ? (
             <>
                 <Nav />
                 <header>
                     <div className="wrapper">
-                        <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
+                        <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} logout={logout} deleteAccount={deleteAccount} /> 
                     </div>
                 </header>
                 <main className="wrapper">

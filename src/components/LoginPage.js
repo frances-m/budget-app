@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import firebase from "../firebase";
-import { getDatabase, ref, push, onValue, get, child } from "firebase/database";
+import { getDatabase, ref, push, get, child } from "firebase/database";
 
 import CreateAccount from "./CreateAccount";
 import Login from "./Login";
@@ -46,17 +46,17 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
         const dbRef = ref(database);
         const usersRef = ref(database, '/users');
 
-        const usernames = [];
+        let usernames = [];
+
         get(child(dbRef, '/users')).then((response) => {
 
-            let users = response.val();
+            const users = response.val();
 
             for (let user in users) {
                 usernames.push(users[user].username);
             }
-
-            const newUsernameErrorEl = document.querySelector("#newUsernameError");
             console.log(usernames);
+            const newUsernameErrorEl = document.querySelector("#newUsernameError");
             if (usernames.includes(newUsername)) {
                 newUsernameErrorEl.classList.add('show');
                 return;
@@ -73,10 +73,11 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
     const login = (e) => {
         e.preventDefault();
         const database = getDatabase(firebase);
-        const dbRef = ref(database, '/users');
+        const dbRef = ref(database);
 
-        onValue(dbRef, (response) => {
+        get(child(dbRef, '/users')).then((response) => {
             let users = response.val();
+
             for (let user in users) {
                 if (users[user].username === username && users[user].password === password) {
                     updateUserId(username);

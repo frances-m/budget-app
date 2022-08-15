@@ -1,4 +1,9 @@
-const Header = ({ save, toggleLoginPage, isLoggedIn }) => {
+const Header = ({ save, toggleLoginPage, isLoggedIn, logout, deleteAccount }) => {
+
+    const toggleUserMenu = () => {
+        const userMenuEl = document.querySelector('.userMenu');
+        userMenuEl.classList.toggle('show');
+    }
 
     return (
         <>
@@ -15,11 +20,15 @@ const Header = ({ save, toggleLoginPage, isLoggedIn }) => {
                                 check_circle
                             </span>
                         </button>
-                        <button className="userBtn" type="button" >
-                            <span className="material-symbols-outlined">
+                        <button className="userBtn" onClick={toggleUserMenu} type="button" >
+                            <span className="material-symbols-outlined show">
                                 account_circle
                             </span>
                         </button>
+                        <div className="userMenu">
+                            <button onClick={logout}>logout</button>
+                            <button className="delAccountBtn" onClick={deleteAccount}>delete account</button>
+                        </div>
                     </div>
                 }
             </div>
