@@ -14,7 +14,7 @@ const Nav = () => {
 
     return (
         <nav>
-            <button className="navBtn" onClick={toggleNav} aria-label="open navigation sidebar">
+            <button className="navBtn" onClick={toggleNav} aria-label="toggle navigation sidebar">
                 <span className="material-symbols-outlined">
                     keyboard_double_arrow_right
                 </span>

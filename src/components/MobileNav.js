@@ -8,6 +8,7 @@ const MobileNav = ({ save, toggleLoginPage, isLoggedIn }) => {
         navEl.classList.toggle('open');
         navBtnEl.classList.toggle('toggle');
     }
+    
     return (
         <nav className="mobileNav">
             <button className="mobileNavBtn" onClick={toggleMobileNav} aria-label="open navigation sidebar">

@@ -9,11 +9,14 @@ import Income from './components/Income';
 import Expenses from './components/Expenses';
 import Results from './components/Results';
 import MobileResults from './components/MobileResults';
+import Nav from './components/Nav';
 import MobileNav from './components/MobileNav';
 
 import './App.css';
-import Nav from './components/Nav';
 
+
+// Creating variables to hold inital state values
+// These variables are used againg when resetting the page to its defaults
 const initalIncome = {
     wages: 0,
     otherIncome: 0
@@ -73,41 +76,23 @@ const initialExpenseValues = [[0,0,0,0],[0,0,0,0,0],[0,0],[0,0,0,0,0],[0]];
 
 
 function App() {
+    // holds income categories and values
     const [income, setIncome] = useState(initalIncome);
-
+    // holds expense categories
     const [expenses, setExpenses] = useState(initialExpenses);
-
+    // holds the values of the expenses in each category
     const [expenseValues, setExpenseValues] = useState(initialExpenseValues);
-
-    const [totalIncome, setTotalIncome] = useState("$0");
-    const [totalExpenses, setTotalExpenses] = useState("$0");
-    const [netIncome, setNetIncome] = useState("$0");
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState("");
 
     const [isMobileView, setIsMobileView] = useState(false);
 
-    useEffect(() => {
-        let calcIncome = 0;
-        let calcExpenses = 0;
-        
-        for (let key in income) {
-            calcIncome += Number(income[key]);
-        }
 
-        expenseValues.forEach((category) => {
-            category.forEach((value) => {
-                calcExpenses += value;
-            })
-        })
-
-        setTotalIncome(calcIncome);
-        setTotalExpenses(calcExpenses);
-        setNetIncome(calcIncome - calcExpenses);
-    }, [income, expenseValues]);
-    
     useEffect(() => {
+        // checks the window's current width
+        // determine if the user needs the mobile view
+            // set isMobileView in state to the appropriate boolean
         const checkWindowSize = () => {
             if (window.innerWidth <= 580) {
                 setIsMobileView(true);
@@ -115,29 +100,41 @@ function App() {
                 setIsMobileView(false);
             }
         }
-    
+
         window.addEventListener('resize', checkWindowSize);
 
+        // if the user has previously logged in and their userId is stored in localStorage...
         if (window.localStorage.userId) {
+            // set the userId in state to the userId of the previous session
+            // and change isLoggedIn to true
             setUserId(window.localStorage.userId);
             setIsLoggedIn(true);
         }
     }, []);
 
+    // when userId is updated...
     useEffect(() => {
+        // if window.localStorage exists...
         if (window.localStorage) {
+            // store the userId in localStorage
             window.localStorage.userId = userId;
         }
 
+        // if no userId exists in state...
         if (!userId) {
+            // do nothing else
             return;
         }
 
+        // reference the user's data stored in the database
         const database = getDatabase(firebase);
         const dbRef = ref(database, `${userId}/`);
 
+        // when the user logs in & when the user's data is updated...
         onValue(dbRef, (response) => {
+            // if the user's database exists and has values
             if (response.exists()) {
+                // use the data returned from the database to set the income and expense state variables
                 const data = response.val();
                 setIncome(data.income);
                 setExpenses(data.expenses);
@@ -148,83 +145,115 @@ function App() {
 
 
     const handleInputChange = (e, needKey = true) => {
+        // initialize value variable
         let value;
-        
+
+        // if the user has not deleted all numerical values from the target input
         if (e.target.value !== "$") {
+            // set the value variable to the value of the target input after removing commas and dollar signs
             value = Number(e.target.value.replace(/[,$]/g, ''));
         } 
         
+        // if the target input has no numerical value
         if (!value) {
+            // set the value target to 0
             value = 0;
         }
         
+        // if the numerical value of the target input exceeds the value cap
         if (value > 99999) {
+            // do not set a new value
             return;
         }
+
+        // if the function call asks for a key (used to reference the key of an object)
         if (needKey) {
+            // grab the key from the target input's name attribute
+            // and return the key and the value
             const key = e.target.name;
             return [key, value];
         } else {
+            // otherwise, just return the value
             return value;
         }
     }
 
+    // when an input inside of <Income /> is updated...
     const updateIncome = (e) => {
         try {
+            // get the key needed to reference the location in state that will be updated and the new value for that key
             const [key, value] = handleInputChange(e);
     
+            // update the income state variable with the new value
             setIncome(prev => ({
                 ...prev,
                 [key]: value
             }));
 
         } catch (err) {
+            console.log(err);
             return;
         }
     }
 
+    // when an input inside of <Expenses /> is updated...
     const updateExpenses = (e, categoryIndex, subcategoryIndex) => {
+        // get the value that will be used to update the expenseValues state variable
         const value = handleInputChange(e, false);
         let i = 0;
 
+        // if no value was returned by handleInputChange...
         if (value === undefined) {
+            // do not update expenseValues
             return;
         }
 
+        // update the expenseValues state variable by using the prev state
         setExpenseValues(prev => {
+            // for each category in the prev expenseValues state...
             return prev.map((categoryValue) => {
+                // if the current category matches the category that the target input is attempting to update
                 if (i === categoryIndex) {
+                    // use the index of the subcategory to update the category of the prev state
                     categoryValue[subcategoryIndex] = value;
                     i++
                 } else {
                     i++;
                 }
+
+                // return the updated array to setExpenseValues
                 return categoryValue;
             })
         })
     }
 
     const save = () => {
+        // reference the user's data stored in the database
         const database = getDatabase(firebase);
         const dbRef = ref(database, `${userId}/`);
 
         const saveIconEl = document.querySelector('.saveIcon');
         const successIconEl = document.querySelector('.successIcon');
 
-        saveIconEl.classList.toggle('show');
-        successIconEl.classList.toggle('show');
-
+        // use the current state values (income, expenses, expenseValues) to update the corresponding values in the user's database
         set(dbRef, {income, expenses, expenseValues})
-            .then(() => {
+        // if database updates successfully...
+        .then(() => {
+            // show the success icon to the user, then...
+                saveIconEl.classList.toggle('show');
+                successIconEl.classList.toggle('show');
+                // wait 2s before showing the save icon to the user again
                 setTimeout(() => {
                     saveIconEl.classList.toggle('show');
                     successIconEl.classList.toggle('show');
                 }, 2000)
-                
             })
+            // otherwise...
             .catch((err) => {
+                // alert the user of the issue
                 alert('failed to save! please try again later.');
             });
+
     }
 
     const toggleLoginPage = () => {
@@ -238,6 +267,7 @@ function App() {
     }
 
     const logout = () => {
+        // set state values to their defaults
         setIncome(initalIncome);
         setExpenses(initialExpenses);
         setExpenseValues(initialExpenseValues);
@@ -247,29 +277,35 @@ function App() {
     }
 
     const deleteAccount = () => {
+        // confirm that the user wants to delete their account
         const isConfirmed = window.confirm('Are you sure you want to delete you account?');
         
+        // if the user confirms...
         if (isConfirmed) {
-
+            // reference the user's data stored in the database
             const database = getDatabase(firebase);
             const userIdRef = ref(database, `${userId}/`);
+            // remove their data from the database
             remove(userIdRef);
 
 
+            // reference the object containing all users in the database
             const dbRef = ref(database);
             const usersRef = ref(database, '/users');
 
+            // get an object containing all of the users in the database
             get(child(dbRef, '/users')).then((response) => {
-                
                 const users = response.val();
                 const newUsersObject = {};
 
+                // loop through the users object, adding each user to a new users object unless the user's username matches the current userId in state
                 for (let user in users) {
                     if (users[user].username !== userId) {
                         newUsersObject[user] = users[user];
                     }
                 }
                 
+                // set the users object in the database to the new users object
                 set(usersRef, newUsersObject);
             });
 
@@ -289,13 +325,13 @@ function App() {
                 <main className="wrapper">
                     <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
                     <Income income={income} updateIncome={updateIncome} />
-                    <Results totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} />
+                    <Results income={income} expenseValues={expenseValues} />
                     <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
                 </main>
             </>
         ) :
             <>
-                <MobileResults totalIncome={totalIncome} totalExpenses={totalExpenses} netIncome={netIncome} /> 
+                <MobileResults income={income} expenseValues={expenseValues} /> 
                 <MobileNav save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
                 <main className="wrapper">
                     <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
