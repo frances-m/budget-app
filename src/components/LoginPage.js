@@ -63,6 +63,8 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
             } else {
                 newUsernameErrorEl.classList.remove('show');
                 push(usersRef, {"username": newUsername, "password": newPassword});
+                setNewUsername("");
+                setNewPassword("");
                 return;
             }
         });
@@ -82,11 +84,13 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
                 if (users[user].username === username && users[user].password === password) {
                     updateUserId(username);
                     toggleLoginPage();
+                    setUsername("");
+                    setPassword("");
                     return;
                 } 
             }
             alert('user not found');
-        })
+        });
     }
 
     return (
