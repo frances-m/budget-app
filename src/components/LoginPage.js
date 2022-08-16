@@ -113,7 +113,11 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
         <section className="loginScreen">
             <div className="login">
                 <div className="loginWrapper">
-                    <button className="loginClose" type="button" onClick={toggleLoginPage}>x</button>
+                    <button className="loginClose" type="button" onClick={toggleLoginPage}>
+                        <span className="material-symbols-outlined">
+                            close
+                        </span>
+                    </button>
                     {
                         needsAccount ? 
                         <CreateAccount toggleCreateAccountPage={toggleCreateAccountPage} createAccount={createAccount} newUsername={newUsername} newPassword={newPassword} updateLoginInputs={updateLoginInputs} /> :

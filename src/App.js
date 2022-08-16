@@ -8,9 +8,7 @@ import LoginPage from './components/LoginPage';
 import Income from './components/Income';
 import Expenses from './components/Expenses';
 import Results from './components/Results';
-import MobileResults from './components/MobileResults';
 import Nav from './components/Nav';
-import MobileNav from './components/MobileNav';
 
 import './App.css';
 
@@ -86,23 +84,9 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userId, setUserId] = useState("");
 
-    const [isMobileView, setIsMobileView] = useState(false);
 
-
+    // on component mount...
     useEffect(() => {
-        // checks the window's current width
-        // determine if the user needs the mobile view
-            // set isMobileView in state to the appropriate boolean
-        const checkWindowSize = () => {
-            if (window.innerWidth <= 580) {
-                setIsMobileView(true);
-            } else {
-                setIsMobileView(false);
-            }
-        }
-
-        window.addEventListener('resize', checkWindowSize);
-
         // if the user has previously logged in and their userId is stored in localStorage...
         if (window.localStorage.userId) {
             // set the userId in state to the userId of the previous session
@@ -162,8 +146,8 @@ function App() {
         
         // if the numerical value of the target input exceeds the value cap
         if (value > 99999) {
-            // do not set a new value
-            return;
+            // set value to undefined
+            value = undefined;
         }
 
         // if the function call asks for a key (used to reference the key of an object)
@@ -172,28 +156,26 @@ function App() {
             // and return the key and the value
             const key = e.target.name;
             return [key, value];
-        } else {
-            // otherwise, just return the value
-            return value;
         }
+
+        // otherwise, just return the value
+        return value;
     }
 
     // when an input inside of <Income /> is updated...
     const updateIncome = (e) => {
-        try {
-            // get the key needed to reference the location in state that will be updated and the new value for that key
-            const [key, value] = handleInputChange(e);
-    
-            // update the income state variable with the new value
-            setIncome(prev => ({
-                ...prev,
-                [key]: value
-            }));
+        // get the key needed to reference the location in state that will be updated and the new value for that key
+        const [key, value] = handleInputChange(e);
 
-        } catch (err) {
-            console.log(err);
+        if (value === undefined || key === undefined) {
             return;
         }
+
+        // update the income state variable with the new value
+        setIncome(prev => ({
+            ...prev,
+            [key]: value
+        }));
     }
 
     // when an input inside of <Expenses /> is updated...
@@ -253,7 +235,6 @@ function App() {
                 // alert the user of the issue
                 alert('failed to save! please try again later.');
             });
-
     }
 
     const toggleLoginPage = () => {
@@ -314,31 +295,16 @@ function App() {
     }
 
     return (
-        !isMobileView ? (
-            <>
-                <Nav />
-                <header>
-                    <div className="wrapper">
-                        <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} logout={logout} deleteAccount={deleteAccount} /> 
-                    </div>
-                </header>
-                <main className="wrapper">
-                    <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
-                    <Income income={income} updateIncome={updateIncome} />
-                    <Results income={income} expenseValues={expenseValues} />
-                    <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
-                </main>
-            </>
-        ) :
-            <>
-                <MobileResults income={income} expenseValues={expenseValues} /> 
-                <MobileNav save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} /> 
-                <main className="wrapper">
-                    <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
-                    <Income income={income} updateIncome={updateIncome} />
-                    <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
-                </main>
-            </>
+        <>
+            <Nav />
+            <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} logout={logout} deleteAccount={deleteAccount} /> 
+            <main className="wrapper">
+                <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
+                <Income income={income} updateIncome={updateIncome} />
+                <Results income={income} expenseValues={expenseValues} />
+                <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
+            </main>
+        </>
     );
 }
 
