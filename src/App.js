@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import firebase from './firebase';
-import { getDatabase, onValue, ref, set, remove, get, child } from 'firebase/database';
+import { getDatabase, onValue, ref } from 'firebase/database';
 
 import Header from './components/Header';
 import LoginPage from './components/LoginPage';
@@ -209,34 +209,6 @@ function App() {
         })
     }
 
-    const save = () => {
-        // reference the user's data stored in the database
-        const database = getDatabase(firebase);
-        const dbRef = ref(database, `${userId}/`);
-
-        const saveIconEl = document.querySelector('.saveIcon');
-        const successIconEl = document.querySelector('.successIcon');
-
-        // use the current state values (income, expenses, expenseValues) to update the corresponding values in the user's database
-        set(dbRef, {income, expenses, expenseValues})
-        // if database updates successfully...
-        .then(() => {
-            // show the success icon to the user, then...
-                saveIconEl.classList.toggle('show');
-                successIconEl.classList.toggle('show');
-                // wait 2s before showing the save icon to the user again
-                setTimeout(() => {
-                    saveIconEl.classList.toggle('show');
-                    successIconEl.classList.toggle('show');
-                }, 2000)
-            })
-            // otherwise...
-            .catch((err) => {
-                // alert the user of the issue
-                alert('failed to save! please try again later.');
-            });
-    }
-
     const toggleLoginPage = () => {
         const loginPageEl = document.querySelector('.loginScreen');
         loginPageEl.classList.toggle('show');
@@ -257,47 +229,18 @@ function App() {
         setIsLoggedIn(false);
     }
 
-    const deleteAccount = () => {
-        // confirm that the user wants to delete their account
-        const isConfirmed = window.confirm('Are you sure you want to delete you account?');
-        
-        // if the user confirms...
-        if (isConfirmed) {
-            // reference the user's data stored in the database
-            const database = getDatabase(firebase);
-            const userIdRef = ref(database, `${userId}/`);
-            // remove their data from the database
-            remove(userIdRef);
-
-
-            // reference the object containing all users in the database
-            const dbRef = ref(database);
-            const usersRef = ref(database, '/users');
-
-            // get an object containing all of the users in the database
-            get(child(dbRef, '/users')).then((response) => {
-                const users = response.val();
-                const newUsersObject = {};
-
-                // loop through the users object, adding each user to a new users object unless the user's username matches the current userId in state
-                for (let user in users) {
-                    if (users[user].username !== userId) {
-                        newUsersObject[user] = users[user];
-                    }
-                }
-                
-                // set the users object in the database to the new users object
-                set(usersRef, newUsersObject);
-            });
-
-            logout();
-        }
-    }
-
     return (
         <>
             <Nav />
-            <Header save={save} toggleLoginPage={toggleLoginPage} isLoggedIn={isLoggedIn} logout={logout} deleteAccount={deleteAccount} /> 
+            <Header 
+                toggleLoginPage={toggleLoginPage} 
+                isLoggedIn={isLoggedIn} 
+                logout={logout} 
+                income={income} 
+                expenses={expenses} 
+                expenseValues={expenseValues} 
+                userId={userId} 
+            /> 
             <main className="wrapper">
                 <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />

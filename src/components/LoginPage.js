@@ -56,6 +56,7 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
             
             // loop through the users object and store the usernames of each user in an array
             for (let user in users) {
+                console.log(user);
                 usernames.push(users[user].username);
             }
             
