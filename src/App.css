@@ -445,7 +445,7 @@ main {
 .visibilityBtn {
 	position: absolute;
 	right: 15px;
-	bottom: 13px;
+	bottom: 13.5px;
 
 	padding: 0 10px;
 }
@@ -756,12 +756,12 @@ footer a {
 	}
 
 	.loginWrapper {
-		width: 80%;
+		width: 85%;
 	}
 
 	.visibilityBtn {
 		right: 5px;
-		bottom: 12px;
+		bottom: 12.5px;
 	}
 
 }
