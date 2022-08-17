@@ -2,8 +2,7 @@ const Nav = () => {
     const toggleNav = () => {
         const navEl = document.querySelector('nav');
         const navBtnEl = document.querySelector('.navBtn');
-        const mobileNavBtnEl = document.querySelector('.navBtn-mobile');
-        console.log(mobileNavBtnEl);
+        const mobileNavBtnEl = document.querySelector('.navBtnMobile');
 
         navEl.classList.toggle('open');
         navBtnEl.classList.toggle('transition');
@@ -17,7 +16,7 @@ const Nav = () => {
 
     return (
         <>
-            <button className="navBtn-mobile" onClick={toggleNav} aria-label="toggle navigation sidebar">
+            <button className="navBtnMobile" onClick={toggleNav} aria-label="toggle navigation sidebar">
                 <span className="material-symbols-outlined">
                     keyboard_double_arrow_left
                 </span>

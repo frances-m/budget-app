@@ -21,7 +21,7 @@ const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, ne
             <div className="inputContainer">
                 <label htmlFor="newPassword">password</label>
                 <input value={newPassword} onChange={updateLoginInputs} type={isPasswordVisible ? "text" : "password"} name="newPassword" id="newPassword" />
-                <button className="visibilityBtn" onClick={togglePasswordVisibility} type="button" aria-label="toggle password visibility">
+                <button className="loginVisibilityBtn" onClick={togglePasswordVisibility} type="button" aria-label="toggle password visibility">
                     {
                         isPasswordVisible ?
                             <span className="material-symbols-outlined">visibility_off</span> : 

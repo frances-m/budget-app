@@ -30,17 +30,17 @@ const Results = ({ income, expenseValues }) => {
 
     return (
         <section className="results">
-            <div className="netIncome">
+            <div className="resultsNetIncome">
                 <h2>Net Income</h2>
-                <p className="net"><span>$</span>{netIncome.toLocaleString()}</p>
+                <p className="resultsNet"><span>$</span>{netIncome.toLocaleString()}</p>
             </div>
 
-            <div className="total totalIncome">
+            <div className="resultsTotal resultsTotalIncome">
                 <h3>Total Income</h3>
                 <p><span>$</span>{totalIncome.toLocaleString()}</p>
             </div>
 
-            <div className="total totalExpenses">
+            <div className="resultsTotal resultsTotalExpenses">
                 <h3>Total Expenses</h3>
                 <p><span>$</span>{totalExpenses.toLocaleString()}</p>
             </div>

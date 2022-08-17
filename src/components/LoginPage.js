@@ -56,7 +56,6 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
             
             // loop through the users object and store the usernames of each user in an array
             for (let user in users) {
-                console.log(user);
                 usernames.push(users[user].username);
             }
             
@@ -114,7 +113,7 @@ const LoginPage = ({updateUserId, toggleLoginPage}) => {
         <section className="loginScreen">
             <div className="login">
                 <div className="loginWrapper">
-                    <button className="loginClose" type="button" onClick={toggleLoginPage}>
+                    <button className="loginCloseBtn" type="button" onClick={toggleLoginPage}>
                         <span className="material-symbols-outlined">
                             close
                         </span>

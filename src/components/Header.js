@@ -4,7 +4,7 @@ import { getDatabase, ref, set, remove, child, get } from "firebase/database";
 const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses, expenseValues }) => {
 
     const toggleUserMenu = () => {
-        const userMenuEl = document.querySelector('.userMenu');
+        const userMenuEl = document.querySelector('.headerUserMenu');
         userMenuEl.classList.toggle('show');
     }
 
@@ -13,8 +13,8 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
         const database = getDatabase(firebase);
         const dbRef = ref(database, `${userId}/`);
 
-        const saveIconEl = document.querySelector('.saveIcon');
-        const successIconEl = document.querySelector('.successIcon');
+        const saveIconEl = document.querySelector('.headerSaveIcon');
+        const successIconEl = document.querySelector('.headerSuccessIcon');
 
         // use the current state values (income, expenses, expenseValues) to update the corresponding values in the user's database
         set(dbRef, {income, expenses, expenseValues})
@@ -77,26 +77,26 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
         <header>
             <div className="wrapper">
                 <h1>Moneta</h1>
-                <div className="btnContainer">
+                <div className="headerBtnContainer">
                     {!isLoggedIn ? 
-                        <button className="loginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
-                        <div className="loggedIn">
-                            <button className="saveBtn" onClick={save} type="button" aria-label="save current budget" >
-                                <span className="saveIcon show material-symbols-outlined">
+                        <button className="headerLoginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
+                        <div className="headerLoggedIn">
+                            <button className="headerSaveBtn" onClick={save} type="button" aria-label="save current budget" >
+                                <span className="headerSaveIcon show material-symbols-outlined">
                                     save
                                 </span>
-                                <span className="successIcon material-symbols-outlined">
+                                <span className="headerSuccessIcon material-symbols-outlined">
                                     check_circle
                                 </span>
                             </button>
-                            <button className="userBtn" onClick={toggleUserMenu} type="button" aria-label="toggle user menu" >
+                            <button className="headerUserBtn" onClick={toggleUserMenu} type="button" aria-label="toggle user menu" >
                                 <span className="material-symbols-outlined show">
                                     account_circle
                                 </span>
                             </button>
-                            <div className="userMenu">
+                            <div className="headerUserMenu">
                                 <button onClick={logout}>logout</button>
-                                <button className="delAccountBtn" onClick={deleteAccount}>delete account</button>
+                                <button className="headerDelAccountBtn" onClick={deleteAccount}>delete account</button>
                             </div>
                         </div>
                     }
