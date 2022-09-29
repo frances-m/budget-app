@@ -82,37 +82,42 @@ function App() {
     const [expenseValues, setExpenseValues] = useState(initialExpenseValues);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userId, setUserId] = useState("");
+    const [user, setUser] = useState(null);
 
 
     // on component mount...
     useEffect(() => {
-        // if the user has previously logged in and their userId is stored in localStorage...
-        if (window.localStorage.userId) {
-            // set the userId in state to the userId of the previous session
+        // if the user has previously logged in and their user info is stored in localStorage...
+        if (localStorage.user !== "null") {
+            // set the user info in state to the user info of the previous session
             // and change isLoggedIn to true
-            setUserId(window.localStorage.userId);
+            setUser(JSON.parse(localStorage.getItem('user')));
+            // console.log(JSON.parse(localStorage.getItem('user')));
             setIsLoggedIn(true);
         }
+        //console.log(user);
+        //console.log(localStorage.getItem('user'))
+        //localStorage.user = null;
     }, []);
 
-    // when userId is updated...
+    // when user info is updated...
     useEffect(() => {
-        // if window.localStorage exists...
-        if (window.localStorage) {
-            // store the userId in localStorage
-            window.localStorage.userId = userId;
+        // if localStorage exists...
+        if (localStorage) {
+            // store the user info in localStorage
+            //localStorage.user = JSON.stringify(user);
+            localStorage.setItem('user', JSON.stringify(user));
         }
 
-        // if no userId exists in state...
-        if (!userId) {
+        // if no user info exists in state...
+        if (!user) {
             // do nothing else
             return;
         }
 
         // reference the user's data stored in the database
         const database = getDatabase(firebase);
-        const dbRef = ref(database, `${userId}/`);
+        const dbRef = ref(database, `${user.uid}/`);
 
         // when the user logs in & when the user's data is updated...
         onValue(dbRef, (response) => {
@@ -125,7 +130,7 @@ function App() {
                 setExpenseValues(data.expenseValues);
             }
         });
-    }, [userId]);
+    }, [user]);
 
 
     const handleInputChange = (e, needKey = true) => {
@@ -214,8 +219,8 @@ function App() {
         loginPageEl.classList.toggle('show');
     }
 
-    const updateUserId = (username) => {
-        setUserId(username);
+    const updateUser = (userObj) => {
+        setUser(userObj);
         setIsLoggedIn(true);
     }
 
@@ -225,7 +230,7 @@ function App() {
         setExpenses(initialExpenses);
         setExpenseValues(initialExpenseValues);
 
-        setUserId("");
+        setUser({});
         setIsLoggedIn(false);
     }
 
@@ -239,10 +244,10 @@ function App() {
                 income={income} 
                 expenses={expenses} 
                 expenseValues={expenseValues} 
-                userId={userId} 
+                user={user} 
             /> 
             <main className="wrapper">
-                <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
+                <LoginPage updateUser={updateUser} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />
                 <Results income={income} expenseValues={expenseValues} />
                 <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />

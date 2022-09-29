@@ -1,7 +1,8 @@
 import firebase from "../firebase";
 import { getDatabase, ref, set, remove, child, get } from "firebase/database";
+import { getAuth, deleteUser } from "firebase/auth";
 
-const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses, expenseValues }) => {
+const Header = ({ toggleLoginPage, isLoggedIn, logout, user, income, expenses, expenseValues }) => {
 
     const toggleUserMenu = () => {
         const userMenuEl = document.querySelector('.headerUserMenu');
@@ -11,7 +12,7 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
     const save = () => {
         // reference the user's data stored in the database
         const database = getDatabase(firebase);
-        const dbRef = ref(database, `${userId}/`);
+        const dbRef = ref(database, `${user.uid}/`);
 
         const saveIconEl = document.querySelector('.headerSaveIcon');
         const successIconEl = document.querySelector('.headerSuccessIcon');
@@ -42,32 +43,44 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
         
         // if the user confirms...
         if (isConfirmed) {
+            // store the current user's auth info
+            const auth = getAuth();
+            const user = auth.currentUser;
             // reference the user's data stored in the database
             const database = getDatabase(firebase);
-            const userIdRef = ref(database, `${userId}/`);
-            // remove their data from the database
-            remove(userIdRef);
+            const userRef = ref(database, `${user.uid}/`);
 
-
-            // reference the object containing all users in the database
-            const dbRef = ref(database);
-            const usersRef = ref(database, '/users');
-
-            // get an object containing all of the users in the database
-            get(child(dbRef, '/users')).then((response) => {
-                const users = response.val();
-                const newUsersObject = {};
-
-                // loop through the users object, adding each user to a new users object unless the user's username matches the current userId in state
-                for (let user in users) {
-                    if (users[user].username !== userId) {
-                        newUsersObject[user] = users[user];
-                    }
-                }
-                
-                // set the users object in the database to the new users object
-                set(usersRef, newUsersObject);
+            deleteUser(user)
+            .then(() => {
+                console.log('user deleted');
+                // remove their data from the database
+                remove(userRef);
             });
+
+
+
+
+
+
+            // // reference the object containing all users in the database
+            // const dbRef = ref(database);
+            // const usersRef = ref(database, '/users');
+
+            // // get an object containing all of the users in the database
+            // get(child(dbRef, '/users')).then((response) => {
+            //     const users = response.val();
+            //     const newUsersObject = {};
+
+            //     // loop through the users object, adding each user to a new users object unless the user's username matches the current userId in state
+            //     for (let user in users) {
+            //         if (users[user].username !== userId) {
+            //             newUsersObject[user] = users[user];
+            //         }
+            //     }
+                
+            //     // set the users object in the database to the new users object
+            //     set(usersRef, newUsersObject);
+            // });
 
             logout();
         }

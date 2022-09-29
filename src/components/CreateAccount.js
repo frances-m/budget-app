@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, newPassword, updateLoginInputs }) => {
+const CreateAccount = ({ toggleCreateAccountPage, updateLoginInputs, createAccount, newEmail, newPassword }) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     
     const togglePasswordVisibility = () => {
@@ -12,11 +12,11 @@ const CreateAccount = ({ toggleCreateAccountPage, createAccount, newUsername, ne
             <h2>Create a New Account</h2>
             <div className="inputContainer">
                 <div className="inputLabel">
-                    <label htmlFor="newUsername">username</label>
-                    <p className="errorMessage" id="newUsernameError">username not available</p>
+                    <label htmlFor="newEmail">email</label>
+                    <p className="errorMessage" id="newEmailError">account already exists</p>
                 </div>
 
-                <input value={newUsername} onChange={updateLoginInputs} type="text" name="newUsername" id="newUsername" />
+                <input value={newEmail} onChange={updateLoginInputs} type="text" name="newEmail" id="newEmail" />
             </div>
             <div className="inputContainer">
                 <label htmlFor="newPassword">password</label>
