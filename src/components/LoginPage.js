@@ -44,51 +44,27 @@ const LoginPage = ({updateUser, toggleLoginPage}) => {
     const createAccount = (e) => {
         e.preventDefault();
 
+        // TODO: send email to confirm account creation
+
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, newEmail, newPassword)
             .then((userCredential) => {
-                console.log(userCredential);
+                signInWithEmailAndPassword(auth, newEmail, newPassword)
+                    .then((userCredential) => {
+                        updateUser(userCredential.user);
+                        toggleLoginPage();
+                        setNewEmail("");
+                        setNewPassword("");
+                        toggleCreateAccountPage();
+                    }).catch((error) => {
+                        console.log(error.code);
+                        console.log(error.message);
+                    })
             })
             .catch((error) => {
                 console.log(error.code);
                 console.log(error.message);
             });
-        // // reference the root of the database and the object containing all users in the database
-        // const database = getDatabase(firebase);
-        // const dbRef = ref(database);
-        // const usersRef = ref(database, '/users');
-
-        // let usernames = [];
-
-        // // get an object containing all of the users in the database
-        // get(child(dbRef, '/users')).then((response) => {
-
-        //     const users = response.val();
-            
-        //     // loop through the users object and store the usernames of each user in an array
-        //     for (let user in users) {
-        //         usernames.push(users[user].username);
-        //     }
-            
-        //     const newUsernameErrorEl = document.querySelector("#newUsernameError");
-        //     // if the array of all usernames includes the current users chosen username...
-        //     if (usernames.includes(newUsername)) {
-        //         // let the user know that the username has already been taken
-        //         // do nothing else
-        //         newUsernameErrorEl.classList.add('show');
-        //         return;
-        //     } else {
-        //         // otherwise...
-        //         // remove the message letting the user know that the username has already been taken (if it is currently visible)
-        //         newUsernameErrorEl.classList.remove('show');
-        //         // add the new user's username and password to the users object in the database
-        //         push(usersRef, {"username": newUsername, "password": newPassword});
-        //         // reset the create account inputs
-        //         setNewUsername("");
-        //         setNewPassword("");
-        //         return;
-        //     }
-        //  });
     }
 
     const login = (e) => {
@@ -96,40 +72,16 @@ const LoginPage = ({updateUser, toggleLoginPage}) => {
 
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            updateUser(userCredential.user);
-            console.log(userCredential.user);
-            console.log('logged in!')
-        })
-        .catch((error) => {
-            console.log(error.code);
-            console.log(error.message);
-        });
-        // // reference the root of the database
-        // const database = getDatabase(firebase);
-        // const dbRef = ref(database);
-
-        // // get an object containing all of the users in the database
-        // get(child(dbRef, '/users')).then((response) => {
-        //     let users = response.val();
-
-        //     // loop through the users object...
-        //     for (let user in users) {
-        //         // if the users object contains an object with the username and password that the current user has submitted...
-        //         if (users[user].username === username && users[user].password === password) {
-        //             // store the username in state as the userId
-        //             updateUserId(username);
-        //             // close the login page
-        //             toggleLoginPage();
-        //             // reset the login page inputs
-        //             setUsername("");
-        //             setPassword("");
-        //             return;
-        //         } 
-        //     }
-        //     // if the user's login info is not found in the database, alert the user
-        //     alert('user not found');
-        // });
+            .then((userCredential) => {
+                updateUser(userCredential.user);
+                toggleLoginPage();
+                console.log(userCredential.user);
+                console.log('logged in!')
+            })
+            .catch((error) => {
+                console.log(error.code);
+                console.log(error.message);
+            });
     }
 
     return (
