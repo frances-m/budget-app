@@ -1,11 +1,11 @@
-const Login = ({ toggleCreateAccountPage, username, password, updateLoginInputs, login }) => {
+const Login = ({ toggleCreateAccountPage, email, password, updateLoginInputs, login }) => {
 
     return (
         <form onSubmit={login} className="loginForm" action="">
             <h2>Login</h2>
             <div className="inputContainer">
-                <label htmlFor="username">username</label>
-                <input value={username} onChange={updateLoginInputs} type="text" name="username" id="username" />
+                <label htmlFor="email">email</label>
+                <input value={email} onChange={updateLoginInputs} type="text" name="email" id="email" />
             </div>
             <div className="inputContainer">
                 <label htmlFor="password">password</label>

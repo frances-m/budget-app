@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import firebase from './firebase';
 import { getDatabase, onValue, ref } from 'firebase/database';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 
 import Header from './components/Header';
 import LoginPage from './components/LoginPage';
@@ -82,40 +83,36 @@ function App() {
     const [expenseValues, setExpenseValues] = useState(initialExpenseValues);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userId, setUserId] = useState("");
+    const [user, setUser] = useState(null);
 
-
-    // on component mount...
     useEffect(() => {
-        // if the user has previously logged in and their userId is stored in localStorage...
-        if (window.localStorage.userId) {
-            // set the userId in state to the userId of the previous session
-            // and change isLoggedIn to true
-            setUserId(window.localStorage.userId);
-            setIsLoggedIn(true);
-        }
-    }, []);
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.emailVerified) {
+                setIsLoggedIn(true);
+                setUser(user);
+            } else {
+                setIsLoggedIn(false);
+            }
+        })
+    }, [])
 
-    // when userId is updated...
+
+    // when user info is updated...
     useEffect(() => {
-        // if window.localStorage exists...
-        if (window.localStorage) {
-            // store the userId in localStorage
-            window.localStorage.userId = userId;
-        }
 
-        // if no userId exists in state...
-        if (!userId) {
+        // if no user info exists in state...
+        if (!user) {
             // do nothing else
             return;
         }
 
         // reference the user's data stored in the database
         const database = getDatabase(firebase);
-        const dbRef = ref(database, `${userId}/`);
+        const userRef = ref(database, `${user.uid}/`);
 
         // when the user logs in & when the user's data is updated...
-        onValue(dbRef, (response) => {
+        onValue(userRef, (response) => {
             // if the user's database exists and has values
             if (response.exists()) {
                 // use the data returned from the database to set the income and expense state variables
@@ -125,7 +122,7 @@ function App() {
                 setExpenseValues(data.expenseValues);
             }
         });
-    }, [userId]);
+    }, [user]);
 
 
     const handleInputChange = (e, needKey = true) => {
@@ -214,19 +211,27 @@ function App() {
         loginPageEl.classList.toggle('show');
     }
 
-    const updateUserId = (username) => {
-        setUserId(username);
+    const updateUser = (userObj) => {
+        setUser(userObj);
         setIsLoggedIn(true);
     }
 
     const logout = () => {
-        // set state values to their defaults
-        setIncome(initalIncome);
-        setExpenses(initialExpenses);
-        setExpenseValues(initialExpenseValues);
-
-        setUserId("");
-        setIsLoggedIn(false);
+        const auth = getAuth();
+        signOut(auth)
+            .then(() => {
+                // set state values to their defaults
+                setIncome(initalIncome);
+                setExpenses(initialExpenses);
+                setExpenseValues(initialExpenseValues);
+        
+                setUser(null);
+                setIsLoggedIn(false);
+            })
+            .catch((error) => {
+                console.log(error.code);
+                console.log(error.message);
+            })
     }
 
     return (
@@ -239,10 +244,10 @@ function App() {
                 income={income} 
                 expenses={expenses} 
                 expenseValues={expenseValues} 
-                userId={userId} 
+                user={user} 
             /> 
             <main className="wrapper">
-                <LoginPage updateUserId={updateUserId} toggleLoginPage={toggleLoginPage} />
+                <LoginPage updateUser={updateUser} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />
                 <Results income={income} expenseValues={expenseValues} />
                 <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />

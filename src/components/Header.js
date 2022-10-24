@@ -1,7 +1,8 @@
 import firebase from "../firebase";
-import { getDatabase, ref, set, remove, child, get } from "firebase/database";
+import { getDatabase, ref, set, remove } from "firebase/database";
+import { reauthenticateWithCredential, getAuth, deleteUser, EmailAuthProvider } from "firebase/auth";
 
-const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses, expenseValues }) => {
+const Header = ({ toggleLoginPage, isLoggedIn, logout, user, income, expenses, expenseValues }) => {
 
     const toggleUserMenu = () => {
         const userMenuEl = document.querySelector('.headerUserMenu');
@@ -11,7 +12,7 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
     const save = () => {
         // reference the user's data stored in the database
         const database = getDatabase(firebase);
-        const dbRef = ref(database, `${userId}/`);
+        const dbRef = ref(database, `${user.uid}/`);
 
         const saveIconEl = document.querySelector('.headerSaveIcon');
         const successIconEl = document.querySelector('.headerSuccessIcon');
@@ -42,34 +43,40 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, userId, income, expenses,
         
         // if the user confirms...
         if (isConfirmed) {
+            // store the current user's auth info
+            const auth = getAuth();
+            const user = auth.currentUser;
             // reference the user's data stored in the database
             const database = getDatabase(firebase);
-            const userIdRef = ref(database, `${userId}/`);
+            const userRef = ref(database, `${user.uid}/`);
+            
+
             // remove their data from the database
-            remove(userIdRef);
+            // NOTE: there is a possibilty for the user's data to be deleted but not their account - the app would be able to use admin privleges to delete the data after the user has deleted their account, but app does not currently have access to admin privleges 
+            // https://firebase.google.com/docs/database/admin/
+            remove(userRef);
 
+            // prompt the user to re-provide their sign-in credentials
+            const userPassword = prompt('to delete your account, please re-enter password');
+            
+            // re-authenticate user
+            const credential = EmailAuthProvider.credential(user.email, userPassword);
+            reauthenticateWithCredential(user, credential)
+                .then(() => {
+                    // remove user auth profile
+                    deleteUser(user)
+                        .then(() => {
 
-            // reference the object containing all users in the database
-            const dbRef = ref(database);
-            const usersRef = ref(database, '/users');
-
-            // get an object containing all of the users in the database
-            get(child(dbRef, '/users')).then((response) => {
-                const users = response.val();
-                const newUsersObject = {};
-
-                // loop through the users object, adding each user to a new users object unless the user's username matches the current userId in state
-                for (let user in users) {
-                    if (users[user].username !== userId) {
-                        newUsersObject[user] = users[user];
-                    }
-                }
-                
-                // set the users object in the database to the new users object
-                set(usersRef, newUsersObject);
-            });
-
-            logout();
+                            alert('user deleted');
+                            logout();
+                        }).catch((error) => {
+                            console.log(error.code);
+                            console.log(error.message);
+                        });
+                })
+                .catch((error) => {
+                    alert(error.message);
+                })
         }
     }
 
