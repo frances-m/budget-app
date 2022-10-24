@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // import firebase from "../firebase";
 // import { getDatabase, ref, get, child } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 
 import CreateAccount from "./CreateAccount";
 import Login from "./Login";
@@ -43,19 +43,26 @@ const LoginPage = ({updateUser, toggleLoginPage}) => {
 
     const createAccount = (e) => {
         e.preventDefault();
-
-        // TODO: send email to confirm account creation
-
+        
         const auth = getAuth();
+        
         createUserWithEmailAndPassword(auth, newEmail, newPassword)
+        .then((userCredential) => {
+            signInWithEmailAndPassword(auth, newEmail, newPassword)
             .then((userCredential) => {
-                signInWithEmailAndPassword(auth, newEmail, newPassword)
-                    .then((userCredential) => {
-                        updateUser(userCredential.user);
-                        toggleLoginPage();
-                        setNewEmail("");
-                        setNewPassword("");
-                        toggleCreateAccountPage();
+                toggleLoginPage();
+                toggleCreateAccountPage();
+                setNewEmail("");
+                setNewPassword("");
+
+                // send email to confirm account creation
+                sendEmailVerification(auth.currentUser)
+                            .then(() => {
+                                alert('email verification sent')
+                            })
+                            .catch((error) => {
+                                console.log(error.message);
+                            })
                     }).catch((error) => {
                         console.log(error.code);
                         console.log(error.message);
@@ -71,12 +78,15 @@ const LoginPage = ({updateUser, toggleLoginPage}) => {
         e.preventDefault();
 
         const auth = getAuth();
+    
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                updateUser(userCredential.user);
-                toggleLoginPage();
-                console.log(userCredential.user);
-                console.log('logged in!')
+                if (userCredential.emailVerified) {
+                    updateUser(userCredential.user);
+                    toggleLoginPage();
+                } else {
+                    alert('please verify your email to login');
+                }
             })
             .catch((error) => {
                 console.log(error.code);

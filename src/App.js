@@ -88,12 +88,10 @@ function App() {
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log(user);
+            if (user && user.emailVerified) {
                 setIsLoggedIn(true);
                 setUser(user);
             } else {
-                console.log('no user signed in');
                 setIsLoggedIn(false);
             }
         })

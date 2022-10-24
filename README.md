@@ -42,13 +42,13 @@ This was my first experience using Firebase! I've learned a ton about how to imp
 
 ### Continued development
 
--[] Allow users to create and remove inputs
--[] Allow users to create and remove categories
--[] Allow users to add and track multiple months
--[] Allow users to re-order inputs & categories
--[] Implement React Router
--[] Create seperate login page
--[] Create user account page
+- Allow users to create and remove inputs
+- Allow users to create and remove categories
+- Allow users to add and track multiple months
+- Allow users to re-order inputs & categories
+- Implement React Router
+- Create seperate login page
+- Create user account page
 
 
 ## Author
