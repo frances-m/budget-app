@@ -237,6 +237,7 @@ function App() {
     return (
         <>
             <Nav />
+            <p className="wip">This site is a work in progress - more updates and fixes to come!</p>
             <Header 
                 toggleLoginPage={toggleLoginPage} 
                 isLoggedIn={isLoggedIn} 

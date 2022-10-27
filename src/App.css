@@ -119,6 +119,12 @@ button {
 	'opsz' 40
 }
 
+.wip {
+	text-align: center;
+	background-color: #bcbcbc;
+	color: black;
+}
+
 
 /*** INPUT & FORM STYLES ***/
 fieldset {
