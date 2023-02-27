@@ -1,3 +1,14 @@
+/*** Variables ***/
+body {
+	--main: #000;
+	--secondary: #FFF;
+}
+
+body.darkTheme {
+	--main: #f4f4f4;
+	--secondary: #060606;
+}
+
 /*** TYPOGRAPHY ***/
 /* Global */
 html {
@@ -71,6 +82,9 @@ h3 {
 body {
 	min-height: 100vh;
 	overflow-x: hidden;
+
+	background-color: var(--secondary);
+	color: var(--main)
 }
 
 .wrapper {
@@ -96,6 +110,7 @@ button {
 	background-color: transparent;
 
 	cursor: pointer;
+	color: var(--main);
 }
 
 .errorMessage {
@@ -122,7 +137,7 @@ button {
 .wip {
 	text-align: center;
 	background-color: #bcbcbc;
-	color: black;
+	color: var(--main);
 }
 
 
@@ -143,19 +158,25 @@ input {
 	height: 45px;
 	margin: 0 0 15px 0;
 	padding: 0 20px;
-	border: 5px solid black;
+	border: 5px solid var(--main);
 	border-radius: 38px;
 
 	text-align: right;
 }
 
+
 label {
 	position: absolute;
-
+	
 	height: 0;
 	padding: 11px 0 0 20px;
 }
 
+input, label {
+	background-color: transparent;
+	border-color: var(--main);
+	color: var(--main);
+}
 
 /*** HEADER STYLES ***/
 header {
@@ -173,14 +194,19 @@ header .wrapper {
 
 	display: flex;
 	align-items: center;
-	margin-right: 16px;
+	margin-right: 42px;
+}
+
+.headerBtn {
+	color: var(--main);
 }
 
 .headerLoginBtn {
 	padding: 0 0 5px 0;
-	margin-right: 60px;
+	margin-right: 8px;
+	margin-left: 10px;
 
-	color: black;
+	color: var(--main);
 
 	font-size: 1rem;
 
@@ -191,7 +217,7 @@ header .wrapper {
 	position: relative;
 	top: 1.5px;
 
-	border-bottom: 3px solid black;
+	border-bottom: 3px solid var(--main);
 }
 
 .headerLoggedIn {
@@ -213,15 +239,15 @@ header .wrapper {
 	margin-left: 10px;
 }
 
-.headerSaveBtn:hover > .material-symbols-outlined,
-.headerSaveBtn:focus-visible > .material-symbols-outlined,
-.headerUserBtn:hover > .material-symbols-outlined,
-.headerUserBtn:focus-visible > .material-symbols-outlined {
-	font-variation-settings:
-	'FILL' 1,
-	'wght' 500,
-	'GRAD' 200,
-	'opsz' 40;
+.headerBtn{
+	color: var(--main);
+}
+
+.headerBtn:hover > .material-symbols-outlined,
+.headerBtn:focus-visible > .material-symbols-outlined
+.headerBtn:hover,
+.headerBtn:focus-visible {
+	color: #f9aba7;
 }
 
 header .material-symbols-outlined {
@@ -265,10 +291,10 @@ header .material-symbols-outlined {
 	gap: 10px;
 	width: 150px;
 	padding: 10px;
-	border: 1px solid black;
+	border: 1px solid var(--main);
 	border-radius: 5px;
 
-	background-color: rgb(250, 250, 250);
+	background-color: var(--secondary);
 	box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.3);
 
 	opacity: 0;
@@ -279,24 +305,10 @@ header .material-symbols-outlined {
 	display: flex;
 }
 
-/* .headerUserMenu::after {
-	content: '>>>>>>>>>>>';
-	position: absolute;
-	right: 20px;
-	top: -20px;
-	
-	color: rgb(250, 250, 250);
-
-	font-size: 40px;
-	font-weight: 700;
-	letter-spacing: -15px;
-
-	transform: rotate(-90deg);
-} */
-
 .headerUserMenu button {
 	font-size: .9rem;
 	text-align: left;
+	color: var(--main);
 }
 
 .headerDelAccountBtn {
@@ -340,8 +352,8 @@ main {
 	margin: 0 0 15px 0;
 	padding: 20px;
 
-	color: white;
-	background-color: black;
+	color: var(--secondary);
+	background-color: var(--main);
 }
 
 .resultsTotalIncome {
@@ -388,7 +400,8 @@ main {
 	max-height: 600px;
 	border-radius: 20px;
 	
-	background-color: white;
+	background-color: var(--secondary);
+	color: var(--main);
 	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.507);
 }
 
@@ -472,8 +485,8 @@ main {
 	margin: 20px 0 40px 0;
 	border-radius: 38px;
 
-	background-color: black;
-	color: white;
+	background-color: var(--main);
+	color: var(--secondary);
 }
 
 /* small text at bottom of the login form */
@@ -495,11 +508,12 @@ nav {
 
 	width: 200px;
 	height: 70vh;
-	border: 5px solid black;
+	border: 5px solid var(--main);
 	border-left: none;
 	border-radius: 0 20px 20px 0;
 
-	background-color: white;
+	background-color: var(--secondary);
+	border-color: var(--main);
 
 	transition: .5s;
 }
@@ -514,6 +528,8 @@ nav.open {
 	right: 12px;
 	width: 25px;
 	height: 25px;
+
+	color: var(--main);
 
 	transition: opacity .3s;
 }
@@ -673,7 +689,7 @@ footer a {
 		height: 98vh;
 		border-right: none;
 		border-bottom: none;
-		border-left: 5px solid black;
+		border-left: 5px solid var(--main);
 		border-radius: 20px 0 0 0;
 	}
 
@@ -699,8 +715,8 @@ footer a {
 		width: 45px;
 		border-radius: 50%;
 
-		color: white;
-		background-color: black;
+		color: var(--secondary);
+		background-color: var(--main);
 
 		transition: .6s;
 	}

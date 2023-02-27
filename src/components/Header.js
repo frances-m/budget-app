@@ -80,15 +80,37 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, user, income, expenses, e
         }
     }
 
+    const toggleDarkMode = () => {
+        const headerBtnEls = document.querySelectorAll('.headerBtn');
+        headerBtnEls.forEach(btn => {
+            btn.classList.toggle('dark');
+        })
+
+        document.querySelector('body').classList.toggle('darkTheme');
+
+        const storedTheme = localStorage?.getItem('darkMode');
+        if(storedTheme && storedTheme === 'false'){
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            localStorage?.setItem('darkMode', 'false');
+        }
+
+    }
+
     return (
         <header>
             <div className="wrapper">
                 <h1>Moneta</h1>
                 <div className="headerBtnContainer">
+                    <button className="headerThemeBtn headerBtn" onClick={toggleDarkMode} type="button" aria-label="toggle dark mode" >
+                        <span className="material-symbols-outlined show">
+                            brightness_4
+                        </span>
+                    </button>
                     {!isLoggedIn ? 
-                        <button className="headerLoginBtn" onClick={toggleLoginPage} type="button">Login</button> : 
+                        <button className="headerLoginBtn headerBtn" onClick={toggleLoginPage} type="button">Login</button> : 
                         <div className="headerLoggedIn">
-                            <button className="headerSaveBtn" onClick={save} type="button" aria-label="save current budget" >
+                            <button className="headerSaveBtn headerBtn" onClick={save} type="button" aria-label="save current budget" >
                                 <span className="headerSaveIcon show material-symbols-outlined">
                                     save
                                 </span>
@@ -96,7 +118,7 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, user, income, expenses, e
                                     check_circle
                                 </span>
                             </button>
-                            <button className="headerUserBtn" onClick={toggleUserMenu} type="button" aria-label="toggle user menu" >
+                            <button className="headerUserBtn headerBtn" onClick={toggleUserMenu} type="button" aria-label="toggle user menu" >
                                 <span className="material-symbols-outlined show">
                                     account_circle
                                 </span>

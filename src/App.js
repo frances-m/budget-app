@@ -97,6 +97,14 @@ function App() {
         })
     }, [])
 
+    // dark mode
+    useEffect(() => {
+        const isDarkMode = localStorage?.getItem("darkMode");
+        if(isDarkMode && isDarkMode === 'true'){
+            document.querySelector('body').classList.add('darkTheme');
+        }
+    }, [])
+
 
     // when user info is updated...
     useEffect(() => {
