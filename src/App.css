@@ -141,9 +141,10 @@ button {
 }
 
 .wip {
+	padding: 2px 0;
 	text-align: center;
-	background-color: #bcbcbc;
-	color: var(--main);
+	background-color: black;
+	color: #f9aba7;
 }
 
 
