@@ -81,12 +81,8 @@ const Header = ({ toggleLoginPage, isLoggedIn, logout, user, income, expenses, e
     }
 
     const toggleDarkMode = () => {
-        const headerBtnEls = document.querySelectorAll('.headerBtn');
-        headerBtnEls.forEach(btn => {
-            btn.classList.toggle('dark');
-        })
-
         document.querySelector('body').classList.toggle('darkTheme');
+        document.querySelector('.headerThemeBtn').classList.toggle('dark');
 
         const storedTheme = localStorage?.getItem('darkMode');
         if(storedTheme && storedTheme === 'false'){

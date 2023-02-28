@@ -102,6 +102,7 @@ function App() {
         const isDarkMode = localStorage?.getItem("darkMode");
         if(isDarkMode && isDarkMode === 'true'){
             document.querySelector('body').classList.add('darkTheme');
+            document.querySelector('.headerThemeBtn').classList.toggle('dark');
         }
     }, [])
 
