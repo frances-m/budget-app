@@ -28,11 +28,9 @@ const Expenses = ({ expenses, updateExpenses, expenseValues, updateExpenseLabel,
                                     )
                                 })
                             }
-                            <div className="add">
-                                <button onClick={() => addSubcategory(category.id)} type="button">
-                                    <span className="material-symbols-outlined">Add</span>
-                                </button>
-                            </div>
+                            <button className="add" onClick={() => addSubcategory(category.id)} type="button">
+                                <span className="material-symbols-outlined">Add</span>
+                            </button>
                         </fieldset>
                     )
                 })}
