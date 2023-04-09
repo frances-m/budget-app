@@ -215,6 +215,39 @@ function App() {
         })
     }
 
+    const updateExpenseLabel = (e, categoryIndex, subcategoryIndex) => {
+        setExpenses(prev => {
+            const newExpenses = [...prev];
+            newExpenses[categoryIndex].subcategories[subcategoryIndex].name = e.target.value;
+            return newExpenses;
+        })
+    }
+
+    const addSubcategory = (categoryIndex) => {
+        let ran = false;
+        const newSubcategory = {
+            name: "New Subcategory",
+            id: `${expenses[categoryIndex].categoryName.toLowerCase()}-${expenses[categoryIndex].subcategories.length + 1}`,
+            index: expenses[categoryIndex].subcategories.length
+        }
+
+        setExpenses(prev => {
+            if(ran){
+                return prev;
+            }
+            ran = true;
+            const newExpenses = [...prev];
+            newExpenses[categoryIndex].subcategories.push(newSubcategory);
+            return newExpenses;
+        })
+
+        setExpenseValues(prev => {
+            const newExpenseValues = [...prev];
+            newExpenseValues[categoryIndex].push(0);
+            return newExpenseValues;
+        })
+    }
+
     const toggleLoginPage = () => {
         const loginPageEl = document.querySelector('.loginScreen');
         loginPageEl.classList.toggle('show');
@@ -260,7 +293,12 @@ function App() {
                 <LoginPage updateUser={updateUser} toggleLoginPage={toggleLoginPage} />
                 <Income income={income} updateIncome={updateIncome} />
                 <Results income={income} expenseValues={expenseValues} />
-                <Expenses expenses={expenses} updateExpenses={updateExpenses} expenseValues={expenseValues} />
+                <Expenses 
+                    expenses={expenses} 
+                    updateExpenses={updateExpenses} 
+                    expenseValues={expenseValues} 
+                    updateExpenseLabel={updateExpenseLabel}
+                    addSubcategory={addSubcategory} />
             </main>
         </>
     );

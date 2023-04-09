@@ -1,6 +1,6 @@
 
 
-const Expenses = ({ expenses, updateExpenses, expenseValues }) => {
+const Expenses = ({ expenses, updateExpenses, expenseValues, updateExpenseLabel, addSubcategory }) => {
 
     return (
         <section className="expenses">
@@ -12,20 +12,27 @@ const Expenses = ({ expenses, updateExpenses, expenseValues }) => {
                             <h3>{category.categoryName}</h3>
                             {
                                 category.subcategories.map((subcategory) => {
+                                    const expenseVal = expenseValues[category.id][subcategory.index] ?? 0;
                                     return (
                                         <div className="inputContainer" key={subcategory.id}>
-                                            <label htmlFor={subcategory.name}>{subcategory.name}</label>
+                                            <label className="sr-only" htmlFor={subcategory.name}>{subcategory.name}</label>
+                                            <input className="label" type="text" name={subcategory.name} id={`${category.categoryName}-${subcategory.index}-label`} value={subcategory.name} onChange={(e) => updateExpenseLabel(e, category.id, subcategory.index)} />
                                             <input 
                                             type="text" 
-                                            name={subcategory.name} 
-                                            id={subcategory.name} 
-                                            value={`$${expenseValues[category.id][subcategory.index].toLocaleString()}`} 
+                                            name={subcategory.index} 
+                                            id={`${category.categoryName}-${subcategory.index}`}
+                                            value={`$${expenseVal.toLocaleString()}`} 
                                             onChange={event => updateExpenses(event, category.id, subcategory.index)}
                                             inputMode="numeric" />
                                         </div>
                                     )
                                 })
                             }
+                            <div className="add">
+                                <button onClick={() => addSubcategory(category.id)} type="button">
+                                    <span className="material-symbols-outlined">Add</span>
+                                </button>
+                            </div>
                         </fieldset>
                     )
                 })}

@@ -51,7 +51,7 @@ h3, button {
 
 body,
 input, 
-label {
+.label {
 	font-size: .9rem;
 }
 
@@ -62,7 +62,7 @@ h1,
 }
 
 h2, 
-label,
+.label,
 button {
 	font-weight: 600;
 }
@@ -71,7 +71,7 @@ h3 {
 	font-weight: 500;
 }
 
-input {
+input:not(.label) {
 	font-weight: 400;
 }
 
@@ -159,7 +159,7 @@ fieldset {
 	position: relative;
 }
 
-input {
+input:not(.label) {
 	width: 90%;
 	max-width: 400px;
 	height: 45px;
@@ -172,17 +172,40 @@ input {
 }
 
 
-label {
+.label, .income label {
 	position: absolute;
 	
-	height: 0;
+	border: none;
 	padding: 11px 0 0 20px;
 }
 
-input, label {
+.label:focus,
+.label:focus-visible{
+	outline: none;
+}
+
+input, .label {
 	background-color: transparent;
 	border-color: var(--main);
 	color: var(--main);
+}
+
+.add {
+	width: 90%;
+	max-width: 400px;
+}
+
+.add button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 30px;
+	width: 30px;
+	margin: 0 auto;
+
+	border-radius: 100%;
+	background-color: var(--main);
+	color: var(--secondary);
 }
 
 /*** HEADER STYLES ***/
@@ -212,16 +235,6 @@ header .wrapper {
 .headerBtn:focus-visible {
 	outline: none;
 }
-
-/* .headerThemeBtn > .material-symbols-outlined {
-	font-variation-settings:
-		'FILL' 0,
-		'wght' 500,
-		'GRAD' 200,
-		'opsz' 40;
-
-	transition: .5s;
-} */
 
 .headerThemeBtn.dark > .material-symbols-outlined {
 	font-variation-settings:
